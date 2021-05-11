@@ -1,6 +1,7 @@
 const Styling = {
   colors: {
-    primary: '#003CF8',
+    primary: '#3D3D3D',
+    gray: 'lightgray',
     lightgray: '#FAFAFA'
   },
   textfields: {
@@ -17,11 +18,12 @@ const Styling = {
       fontSize: 16,
     },
     box: {
-      backgroundColor: '#EFEFEF',
+      backgroundColor: 'white',
       borderRadius: 5,
       fontFamily: 'jost-light',
       fontSize: 16,
-      padding: 2,
+      padding: 6,
+      marginTop: 6,
     }
   },
   containers: {
@@ -55,12 +57,16 @@ const Styling = {
       fontSize: 20,
     },
     header: {
-      fontFamily: 'jost-medium',
+      fontFamily: 'jost-light',
       fontSize: 16,
+      textTransform: 'uppercase',
+      letterSpacing: 3,
     },
     subheader: {
-      fontFamily: 'jost-medium',
+      fontFamily: 'jost-light',
       fontSize: 14,
+      textTransform: 'uppercase',
+      letterSpacing: 3,
     },
     body: {
       fontFamily: 'jost-light',

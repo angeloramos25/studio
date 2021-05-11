@@ -13,6 +13,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TodayScreen from './screens/TodayScreen';
 import CommunityScreen from './screens/CommunityScreen';
 
+//Onboarding
+import CreateAccountScreen from './screens/onboarding/CreateAccountScreen';
+
 const Tab = createBottomTabNavigator();
 function TabScreen() {
   return (
@@ -27,6 +30,7 @@ function TabScreen() {
         inactiveTintColor: 'lightgray',
       }}
     >
+      <Tab.Screen name="CreateAccount" component={CreateAccountScreen} />
       <Tab.Screen name="Today" component={TodayScreen} />
       <Tab.Screen name="Community" component={CommunityScreen} />
     </Tab.Navigator>
