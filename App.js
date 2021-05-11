@@ -14,7 +14,23 @@ import TodayScreen from './screens/TodayScreen';
 import CommunityScreen from './screens/CommunityScreen';
 
 //Onboarding
+import UserTypeScreen from './screens/onboarding/UserTypeScreen';
 import CreateAccountScreen from './screens/onboarding/CreateAccountScreen';
+
+const OnboardingStack = createStackNavigator();
+function OnboardingStackScreen() {
+  return(
+    <OnboardingStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: '#FAFAFA' },
+      }}
+    >
+      <OnboardingStack.Screen name="UserType" component={UserTypeScreen} />
+      <OnboardingStack.Screen name="CreateAccount" component={CreateAccountScreen} />
+    </OnboardingStack.Navigator>
+  )
+}
 
 const Tab = createBottomTabNavigator();
 function TabScreen() {
@@ -30,7 +46,7 @@ function TabScreen() {
         inactiveTintColor: 'lightgray',
       }}
     >
-      <Tab.Screen name="CreateAccount" component={CreateAccountScreen} />
+      <Tab.Screen name="Onboarding" component={OnboardingStackScreen} />
       <Tab.Screen name="Today" component={TodayScreen} />
       <Tab.Screen name="Community" component={CommunityScreen} />
     </Tab.Navigator>

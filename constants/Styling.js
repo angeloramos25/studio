@@ -71,6 +71,10 @@ const Styling = {
     body: {
       fontFamily: 'jost-light',
       fontSize: 14,
+    },
+    bodyLarge: {
+      fontFamily: 'jost-light',
+      fontSize: 18,
     }
   }
 };
