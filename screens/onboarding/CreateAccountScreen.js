@@ -9,7 +9,7 @@ import {
   Image,
   ActivityIndicator
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
 import {
   GoogleSignin,
@@ -41,20 +41,33 @@ export default class CreateAccountScreen extends React.Component {
     GoogleSignin.configure();
   }
 
-  normalCreateAccount() {
-    email = this.state.email
-    password = this.state.password
+  async normalCreateAccount() {
+    email = this.state.email;
+    password = this.state.password;
 
-    if (email === "" || password === "") {
-      this.setState({errorMessage: "Please fill out all of the fields above."});
+    let errorMessage;
+    if (email === '') {
+      errorMessage = 'Please enter your email address.';
+    } else if (password === '') {
+      errorMessage = 'Please enter a password.';
+    }
+
+    if (errorMessage) {
+      this.setState({ errorMessage });
       return;
     }
 
+    await AsyncStorage.setItem('email', JSON.stringify(email));
+
     this.setState({isLoading: true});
+
     auth()
     .createUserWithEmailAndPassword(this.state.email, this.state.password)
     .then(async () => {
       console.log('User account created & signed in!');
+      this.props.navigation.navigate('CreateProfile', {
+        email: this.state.email,
+      });
     })
     .catch(error => {
       this.setState({isLoading: false});
@@ -153,7 +166,7 @@ export default class CreateAccountScreen extends React.Component {
             type="cta"
             style={{ marginTop: 24 }}
             onPress={this.normalCreateAccount}
-            loading={this.isLoading}
+            loading={this.state.isLoading}
           />
           <View style={{...Styling.containers.row, marginTop: 24 }}>
             <View style={styles.line}/>
@@ -176,6 +189,9 @@ export default class CreateAccountScreen extends React.Component {
             onPress={this.appleSignIn}
             isLoading={this.state.appleIsLoading}
           />
+          {this.state.errorMessage !== '' &&
+            <Text style={{...Styling.text.body, color: 'red', textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>
+          }
         </SafeAreaView>
       </View>
     )

@@ -86,6 +86,7 @@ export default class CreateAccountScreen extends React.Component {
           {this.state.errorMessage !== '' &&
             <Text style={{...Styling.text.body, color: 'red', textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>
           }
+        </SafeAreaView>
       </View>
     )
   }
