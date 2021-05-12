@@ -20,7 +20,7 @@ export default function TopBar(props) {
       {props.leftButtonText || props.leftButtonImage ?
         <TouchableOpacity onPress={props.onLeftPress} style={styles.leftItem}>
           {props.leftButtonText ?
-            <Text style={{...Styling.text.subheader, color: props.leftButtonColor }}>{props.leftButtonText}</Text>
+            <Text style={{...Styling.text.body, color: props.leftButtonColor }}>{props.leftButtonText}</Text>
             :
             <Image style={{ width: 25, height: 25 }} source={Images[props.leftButtonImage]} />
           }

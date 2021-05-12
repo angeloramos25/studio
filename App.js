@@ -18,6 +18,11 @@ import UserTypeScreen from './screens/onboarding/UserTypeScreen';
 import CreateAccountScreen from './screens/onboarding/CreateAccountScreen';
 import CreateProfileScreen from './screens/onboarding/CreateProfileScreen';
 
+//Challenges stack
+import ChallengesScreen from './screens/ChallengesScreen';
+import ChallengeBasicInfoScreen from './screens/ChallengeBasicInfoScreen';
+import ChallengeAddTasksScreen from './screens/ChallengeAddTasksScreen';
+
 const OnboardingStack = createStackNavigator();
 function OnboardingStackScreen() {
   return(
@@ -31,6 +36,21 @@ function OnboardingStackScreen() {
       <OnboardingStack.Screen name="CreateAccount" component={CreateAccountScreen} />
       <OnboardingStack.Screen name="CreateProfile" component={CreateProfileScreen} />
     </OnboardingStack.Navigator>
+  )
+}
+
+const ChallengeCreationStack = createStackNavigator();
+function ChallengeCreationStackScreen() {
+  return(
+    <ChallengeCreationStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: '#FAFAFA' },
+      }}
+    >
+      <ChallengeCreationStack.Screen name="ChallengeBasicInfo" component={ChallengeBasicInfoScreen} />
+      <ChallengeCreationStack.Screen name="ChallengeAddTasks" component={ChallengeAddTasksScreen} />
+    </ChallengeCreationStack.Navigator>
   )
 }
 
@@ -49,6 +69,7 @@ function TabScreen() {
       }}
     >
       <Tab.Screen name="Onboarding" component={OnboardingStackScreen} />
+      <Tab.Screen name="Challenges" component={ChallengesScreen} />
       <Tab.Screen name="Today" component={TodayScreen} />
       <Tab.Screen name="Community" component={CommunityScreen} />
     </Tab.Navigator>
@@ -89,6 +110,7 @@ export default class App extends React.Component {
           mode="modal"
         >
           <Stack.Screen name="Tabs" component={TabScreen} />
+          <Stack.Screen name="ChallengeCreation" component={ChallengeCreationStackScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
