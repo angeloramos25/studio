@@ -19,8 +19,6 @@ export default class ChallengeBasicInfoScreen extends React.Component {
     this.state = {
       challengeName: '',
       description: '',
-      startDate: null,
-      endDate: null,
       challengeJoinCode: '',
     }
   }
@@ -61,7 +59,7 @@ export default class ChallengeBasicInfoScreen extends React.Component {
             />
           </View>
           <Button
-            onPress={() => this.props.navigation.navigate('ChallengeAddTasks')}
+            onPress={() => this.props.navigation.navigate('ChallengeAddTasks', this.state)}
             text="Continue"
             type="cta"
             style={{ marginTop: 24 }}

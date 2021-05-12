@@ -5,12 +5,14 @@ const Styling = {
     lightgray: '#FAFAFA'
   },
   textfields: {
-    line: {
-      marginTop: 12,
+    outline: {
+      padding: 6,
+      marginTop: 6,
       fontFamily: 'jost-light',
       fontSize: 16,
-      borderBottomColor: 'black',
-      borderBottomWidth: 1,
+      borderColor: 'lightgray',
+      borderWidth: 1,
+      borderRadius: 10
     },
     floating: {
       marginTop: 4,
