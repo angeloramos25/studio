@@ -46,8 +46,6 @@ export default class CreateAccountScreen extends React.Component {
 
     this.setState({ isLoading: true });
 
-    console.log("here1");
-
     const email = this.props.route.params.email;
 
     if (this.props.route.params.userType === 'client') {
@@ -56,15 +54,20 @@ export default class CreateAccountScreen extends React.Component {
         lastName: this.state.lastName,
         email: email,
         uid: auth().currentUser.uid,
+        challengeIDs: []
       });
     } else {
-      console.log("here2");
       await firestore().collection('Admins').doc(auth().currentUser.uid).set({
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         studioName: this.state.studioName,
         email: email,
         uid: auth().currentUser.uid,
+        challengeIDs: []
+      });
+
+      await firestore().collection('Additional').doc('Studio').set({
+        studioNames: firestore.FieldValue.arrayUnion(this.state.studioName)
       });
     }
 
