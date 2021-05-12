@@ -65,9 +65,7 @@ export default class CreateAccountScreen extends React.Component {
     .createUserWithEmailAndPassword(this.state.email, this.state.password)
     .then(async () => {
       console.log('User account created & signed in!');
-      this.props.navigation.navigate('CreateProfile', {
-        email: this.state.email,
-      });
+      this.props.navigation.navigate('CreateProfile', {email: this.state.email, userType: this.props.route.params.userType});
     })
     .catch(error => {
       this.setState({isLoading: false});
@@ -98,6 +96,7 @@ export default class CreateAccountScreen extends React.Component {
       const credential = auth.GoogleAuthProvider.credential(idToken);
       const thing = await auth().signInWithCredential(credential);
       this.setState({ isSigninInProgress: false });
+      this.props.navigation.navigate('CreateProfile', {email: auth().currentUser.email, userType: this.props.route.params.userType});
     } catch (error) {
       this.setState({googleIsLoading: false});
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -131,6 +130,7 @@ export default class CreateAccountScreen extends React.Component {
 
     // Sign the user in with the credential
     await auth().signInWithCredential(appleCredential);
+    this.props.navigation.navigate('CreateProfile', {email: auth().currentUser.email, userType: this.props.route.params.userType});
   }
 
   render() {

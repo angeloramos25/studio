@@ -7,6 +7,7 @@ import {
   TextInput,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 import Images from '../../assets/Images.js';
 import Styling from '../../constants/Styling';
@@ -20,6 +21,7 @@ export default class CreateAccountScreen extends React.Component {
     this.state = {
       firstName: '',
       lastName: '',
+      studioName: '',
       errorMessage: '',
       isLoading: false,
     }
@@ -33,6 +35,8 @@ export default class CreateAccountScreen extends React.Component {
       errorMessage = 'Please enter your first name.';
     } else if (this.state.lastName === '') {
       errorMessage = 'Please enter your last name.';
+    } else if (this.props.route.params.userType === 'admin' && this.state.studioName === '') {
+      errorMessage = 'Please enter your studio name.';
     }
 
     if (errorMessage) {
@@ -42,14 +46,28 @@ export default class CreateAccountScreen extends React.Component {
 
     this.setState({ isLoading: true });
 
-    const email = this.props.route.params && this.props.route.params.email ? this.props.route.params.email : JSON.parse(await AsyncStorage.getItem('email'));
+    console.log("here1");
 
-    await firestore().collection('Users').doc(auth().currentUser.uid).set({
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      email: email,
-      uid: auth().currentUser.uid,
-    });
+    const email = this.props.route.params.email;
+
+    if (this.props.route.params.userType === 'client') {
+      await firestore().collection('Clients').doc(auth().currentUser.uid).set({
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: email,
+        uid: auth().currentUser.uid,
+      });
+    } else {
+      console.log("here2");
+      await firestore().collection('Admins').doc(auth().currentUser.uid).set({
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        studioName: this.state.studioName,
+        email: email,
+        uid: auth().currentUser.uid,
+      });
+    }
+
     this.setState({ isLoading: false });
   }
 
@@ -76,6 +94,16 @@ export default class CreateAccountScreen extends React.Component {
               value={this.state.lastName}
             />
           </View>
+          { this.props.route.params.userType === 'admin' &&
+            <View style={{ marginTop: 24 }}>
+              <Text style={Styling.text.label}>Studio Name</Text>
+              <TextInput
+                style={Styling.textfields.box}
+                onChangeText={text => this.setState({ studioName: text })}
+                value={this.state.studioName}
+              />
+            </View>
+          }
           <Button
             onPress={this.createProfile}
             loading={this.state.isLoading}
