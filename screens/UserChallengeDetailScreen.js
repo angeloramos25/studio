@@ -15,6 +15,7 @@ import TopBar from '../components/TopBar';
 
 import TasksScreen from './TasksScreen';
 import FeedScreen from './FeedScreen';
+import LeaderboardScreen from './LeaderboardScreen';
 
 export default class UserChallengeDetailScreen extends React.Component {
 
@@ -58,6 +59,7 @@ export default class UserChallengeDetailScreen extends React.Component {
       screens = {
         'Tasks': <TasksScreen handleTaskComplete={this.handleTaskComplete} tasks={this.state.challenge.tasks} />,
         'Feed': <FeedScreen user={this.state.user} challenge={this.state.challenge} />
+        'Leaderboard': <LeaderboardScreen challenge={this.state.challenge} />
       }
     }
 
