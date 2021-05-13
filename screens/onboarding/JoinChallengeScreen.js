@@ -72,6 +72,8 @@ export default class JoinChallengeScreen extends React.Component {
       });
     });
 
+    this.props.navigation.navigate('UserChallengeDetail');
+
     this.setState({ isLoading: false });
 
   }

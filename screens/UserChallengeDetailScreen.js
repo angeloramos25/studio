@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 import Images from '../assets/Images.js';
 import Styling from '../constants/Styling';
 import TopBar from '../components/TopBar';
 
 import TasksScreen from './TasksScreen';
+import FeedScreen from './FeedScreen';
 
 export default class UserChallengeDetailScreen extends React.Component {
 
@@ -21,21 +23,32 @@ export default class UserChallengeDetailScreen extends React.Component {
     this.state = {
       currentTab: 'Tasks',
       challenge: null,
+      user: null,
     }
     this.handleTaskComplete = this.handleTaskComplete.bind(this);
   }
 
   async componentDidMount() {
-    const challenge = (await firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').get())._data;
-    this.setState({ challenge });
+    // auth().signOut();
+    const user = auth().currentUser;
+    if (!user) {
+      this.props.navigation.navigate('Onboarding');
+    } else {
+      const user = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
+      const challengeDoc = await firestore().collection('Challenges').doc(user.challengeIDs[0]).get();
+      const challenge = { id: challengeDoc.id, ...challengeDoc._data }
+      this.setState({ user, challenge });
+    }
   }
 
-  handleTaskComplete(taskName) {
+  async handleTaskComplete(taskName) {
     const uid = 'HONQrly1LYRKuWhXz8URugMyDdB2';
     const fieldName = 'UIDToInfo.' + uid + '.taskDates.' + taskName;
-    firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').update({
+    const challenge = (await firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').update({
       [fieldName]: firestore.FieldValue.arrayUnion(new Date()),
-    });
+    }));
+    console.log(challenge);
+    this.setState({ challenge });
   }
 
   render() {
@@ -44,6 +57,7 @@ export default class UserChallengeDetailScreen extends React.Component {
     if (this.state.challenge) {
       screens = {
         'Tasks': <TasksScreen handleTaskComplete={this.handleTaskComplete} tasks={this.state.challenge.tasks} />,
+        'Feed': <FeedScreen user={this.state.user} challenge={this.state.challenge} />
       }
     }
 

@@ -24,8 +24,10 @@ import ChallengesScreen from './screens/ChallengesScreen';
 import ChallengeBasicInfoScreen from './screens/ChallengeBasicInfoScreen';
 import ChallengeAddTasksScreen from './screens/ChallengeAddTasksScreen';
 
-// User challenge detail
+// User challenges
+import UserChallengesScreen from './screens/UserChallengesScreen';
 import UserChallengeDetailScreen from './screens/UserChallengeDetailScreen';
+import AddPostScreen from './screens/AddPostScreen';
 
 const OnboardingStack = createStackNavigator();
 function OnboardingStackScreen() {
@@ -59,24 +61,18 @@ function ChallengeCreationStackScreen() {
   )
 }
 
-const Tab = createBottomTabNavigator();
-function TabScreen() {
-  return (
-    <Tab.Navigator
-      tabBarOptions={{
-        style: {
-          borderTopColor: 'transparent',
-        },
-        backgroundColor: 'white',
-        showLabel: false,
-        activeTintColor: 'black',
-        inactiveTintColor: 'lightgray',
+const UserChallengeStack = createStackNavigator();
+function UserChallengeStackScreen() {
+  return(
+    <UserChallengeStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: '#FAFAFA' },
       }}
     >
-      <Tab.Screen name="Onboarding" component={OnboardingStackScreen} />
-      <Tab.Screen name="Challenges" component={ChallengesScreen} />
-      <Tab.Screen name="UserChallengeDetail" component={UserChallengeDetailScreen} />
-    </Tab.Navigator>
+      <UserChallengeStack.Screen name="UserChallenges" component={UserChallengesScreen} />
+      <UserChallengeStack.Screen name="UserChallengeDetailScreen" component={UserChallengeDetailScreen} />
+    </UserChallengeStack.Navigator>
   )
 }
 
@@ -113,8 +109,10 @@ export default class App extends React.Component {
           }}
           mode="modal"
         >
-          <Stack.Screen name="Tabs" component={TabScreen} />
+          <Stack.Screen name="UserChallengeDetail" component={UserChallengeDetailScreen} />
+          <Stack.Screen name="Onboarding" component={OnboardingStackScreen} />
           <Stack.Screen name="ChallengeCreation" component={ChallengeCreationStackScreen} />
+          <Stack.Screen name="AddPost" component={AddPostScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );

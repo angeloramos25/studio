@@ -19,7 +19,7 @@ import DoubleClick from 'react-native-double-tap';
 import Images from '../assets/Images.js';
 import Styling from '../constants/Styling';
 import TopBar from '../components/TopBar';
-import PostCard from '../components/CustomActivityCard';
+import PostCard from '../components/PostCard';
 import { daysAgo } from '../utils';
 
 export default class FeedScreen extends React.Component {
@@ -40,23 +40,22 @@ export default class FeedScreen extends React.Component {
 
   async componentDidMount() {
     // auth().signOut();
-    this.loadPosts();
-    this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      if (this.props.route.params && this.props.route.params.shouldRefresh) {
-        this.loadPosts();
-        this.props.route.params.shouldRefresh = false;
-      }
-    });
+    // this.loadPosts();
+    // this._unsubscribe = this.props.navigation.addListener('focus', () => {
+    //   if (this.props.route.params && this.props.route.params.shouldRefresh) {
+    //     this.loadPosts();
+    //     this.props.route.params.shouldRefresh = false;
+    //   }
+    // });
   }
 
   componentWillUnmount() {
-    this._unsubscribe();
+    // this._unsubscribe();
   }
 
   async handleLikePressed(postID) {
     const likeObj = {
       userID: auth().currentUser.uid,
-      username: this.state.user.username,
       displayName: this.state.user.firstName + ' ' + this.state.user.lastName,
     }
     const activities = this.state.activities;
@@ -100,11 +99,8 @@ export default class FeedScreen extends React.Component {
   async loadPosts() {
     this.setState({ refreshing: true });
     const userDoc = (await firestore().collection('Users').doc(auth().currentUser.uid).get())._data;
-    const friendIDs = userDoc.friendIDs;
     const activities = (await firestore()
-      .collection('Activities')
-      .where('userID', 'in', friendIDs.concat([auth().currentUser.uid]))
-      .where('shouldPostToFeed', '==', true)
+      .collection('Challenges/' + this.props.challenge.id + '/Feed')
       .orderBy('timestamp', 'desc')
       .limit(25)
       .get())
@@ -184,12 +180,6 @@ export default class FeedScreen extends React.Component {
   render() {
     return(
       <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
-        <TopBar
-          title="Feed"
-          rightButtonImage="add_friend"
-          onRightPress={() => this.props.navigation.navigate('AddFriends')}
-        />
-        <SafeAreaView style={{...Styling.containers.wrapper, flex: 1 }}>
           <FlatList
             ref={ref => this.flatListRef = ref}
             refreshControl={
@@ -267,8 +257,24 @@ export default class FeedScreen extends React.Component {
               </View>
             )}}
           />
-        </SafeAreaView>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddPost')} style={styles.postButton}>
+            <Text style={{ fontSize: 24, color: 'white' }}>+</Text>
+          </TouchableOpacity>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  postButton: {
+    backgroundColor: Styling.colors.primary,
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 96,
+    right: 12,
+  }
+});
