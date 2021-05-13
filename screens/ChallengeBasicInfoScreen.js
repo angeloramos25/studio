@@ -25,7 +25,7 @@ export default class ChallengeBasicInfoScreen extends React.Component {
 
   render() {
     return(
-      <View>
+      <View style={{ backgroundColor: '#FAFAFA' }}>
         <TopBar
           title="Basic Info"
           leftButtonText="Cancel"

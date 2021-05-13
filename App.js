@@ -18,10 +18,13 @@ import UserTypeScreen from './screens/onboarding/UserTypeScreen';
 import CreateAccountScreen from './screens/onboarding/CreateAccountScreen';
 import CreateProfileScreen from './screens/onboarding/CreateProfileScreen';
 
-//Challenges stack
+//Admin challenges stack
 import ChallengesScreen from './screens/ChallengesScreen';
 import ChallengeBasicInfoScreen from './screens/ChallengeBasicInfoScreen';
 import ChallengeAddTasksScreen from './screens/ChallengeAddTasksScreen';
+
+// User challenge detail
+import UserChallengeDetailScreen from './screens/UserChallengeDetailScreen';
 
 const OnboardingStack = createStackNavigator();
 function OnboardingStackScreen() {
@@ -70,8 +73,7 @@ function TabScreen() {
     >
       <Tab.Screen name="Onboarding" component={OnboardingStackScreen} />
       <Tab.Screen name="Challenges" component={ChallengesScreen} />
-      <Tab.Screen name="Today" component={TodayScreen} />
-      <Tab.Screen name="Community" component={CommunityScreen} />
+      <Tab.Screen name="UserChallengeDetail" component={UserChallengeDetailScreen} />
     </Tab.Navigator>
   )
 }
