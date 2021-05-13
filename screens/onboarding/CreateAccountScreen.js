@@ -30,6 +30,7 @@ export default class CreateAccountScreen extends React.Component {
     this.state = {
       email: '',
       password: '',
+      errorMessage: ''
     }
 
     this.normalCreateAccount = this.normalCreateAccount.bind(this);
@@ -168,6 +169,9 @@ export default class CreateAccountScreen extends React.Component {
             onPress={this.normalCreateAccount}
             loading={this.state.isLoading}
           />
+          {this.state.errorMessage !== '' &&
+            <Text style={{...Styling.text.body, color: 'red', textAlign: 'center', marginTop: 12, marginBottom: -12 }}>{this.state.errorMessage}</Text>
+          }
           <View style={{...Styling.containers.row, marginTop: 24 }}>
             <View style={styles.line}/>
             <Text style={{...Styling.text.label, marginLeft: 6, marginRight: 6, color: Styling.colors.gray}}>Or</Text>
@@ -189,9 +193,6 @@ export default class CreateAccountScreen extends React.Component {
             onPress={this.appleSignIn}
             isLoading={this.state.appleIsLoading}
           />
-          {this.state.errorMessage !== '' &&
-            <Text style={{...Styling.text.body, color: 'red', textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>
-          }
         </SafeAreaView>
       </View>
     )

@@ -39,11 +39,11 @@ export default class JoinChallengeScreen extends React.Component {
 
     this.setState({ isLoading: true });
 
-
     let firstName = await AsyncStorage.getItem('first_name');
     let lastName = await AsyncStorage.getItem('last_name');
+    let fullName = firstName + " " + lastName;
 
-    firestore().collection('Challenges').where('challengeJoinCode', '==', this.state.challengeCode).get().then(querySnapshot => {
+    await firestore().collection('Challenges').where('challengeJoinCode', '==', this.state.challengeCode).get().then(querySnapshot => {
       if (querySnapshot.size === 0) {
         this.setState({errorMessage: 'Challenge code is invalid'});
         return;
@@ -55,7 +55,6 @@ export default class JoinChallengeScreen extends React.Component {
         let challengeID = documentSnapshot.id;
         let challengeData = documentSnapshot.data()
 
-        let updated = {}
         firestore().collection('Clients').doc(auth().currentUser.uid).update({
           challengeIDs: firestore.FieldValue.arrayUnion(challengeID)
         });
@@ -65,12 +64,11 @@ export default class JoinChallengeScreen extends React.Component {
           taskDates[task.name] = [];
         }
 
-        updated = {};
-        let string = 'UIDtoInfo.' + auth().currentUser.uid;
-        let name = firstName + " " + lastName;
-        updated[string] = {name: name, taskDates: taskDates}
+        userInfo = {};
+        let userKey = 'UIDtoInfo.' + auth().currentUser.uid;
+        userInfo[userKey] = {name: fullName, taskDates: taskDates}
 
-        firestore().collection('Challenges').doc(challengeID).update(updated);
+        firestore().collection('Challenges').doc(challengeID).update(userInfo);
       });
     });
 
