@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Images from '../../assets/Images.js';
 import Styling from '../../constants/Styling';
@@ -29,13 +30,14 @@ export default class CreateAccountScreen extends React.Component {
   }
 
   async createProfile() {
+    let isClient = this.props.route.params.userType === 'client';
 
     let errorMessage;
     if (this.state.firstName === '') {
       errorMessage = 'Please enter your first name.';
     } else if (this.state.lastName === '') {
       errorMessage = 'Please enter your last name.';
-    } else if (this.props.route.params.userType === 'admin' && this.state.studioName === '') {
+    } else if (!isClient && this.state.studioName === '') {
       errorMessage = 'Please enter your studio name.';
     }
 
@@ -47,8 +49,11 @@ export default class CreateAccountScreen extends React.Component {
     this.setState({ isLoading: true });
 
     const email = this.props.route.params.email;
+    AsyncStorage.setItem('first_name', this.state.firstName);
+    AsyncStorage.setItem('last_name', this.state.lastName);
+    AsyncStorage.setItem('email', email);
 
-    if (this.props.route.params.userType === 'client') {
+    if (isClient) {
       await firestore().collection('Clients').doc(auth().currentUser.uid).set({
         firstName: this.state.firstName,
         lastName: this.state.lastName,
@@ -69,9 +74,15 @@ export default class CreateAccountScreen extends React.Component {
       await firestore().collection('Additional').doc('Studio').set({
         studioNames: firestore.FieldValue.arrayUnion(this.state.studioName)
       });
+
+      AsyncStorage.setItem('studio_name', this.state.studioName);
     }
 
     this.setState({ isLoading: false });
+
+    if (isClient) {
+      this.props.navigation.navigate('JoinChallenge');
+    }
   }
 
   render() {

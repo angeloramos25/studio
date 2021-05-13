@@ -17,6 +17,7 @@ import CommunityScreen from './screens/CommunityScreen';
 import UserTypeScreen from './screens/onboarding/UserTypeScreen';
 import CreateAccountScreen from './screens/onboarding/CreateAccountScreen';
 import CreateProfileScreen from './screens/onboarding/CreateProfileScreen';
+import JoinChallengeScreen from './screens/onboarding/JoinChallengeScreen';
 
 //Admin challenges stack
 import ChallengesScreen from './screens/ChallengesScreen';
@@ -38,6 +39,7 @@ function OnboardingStackScreen() {
       <OnboardingStack.Screen name="UserType" component={UserTypeScreen} />
       <OnboardingStack.Screen name="CreateAccount" component={CreateAccountScreen} />
       <OnboardingStack.Screen name="CreateProfile" component={CreateProfileScreen} />
+      <OnboardingStack.Screen name="JoinChallenge" component={JoinChallengeScreen} />
     </OnboardingStack.Navigator>
   )
 }
