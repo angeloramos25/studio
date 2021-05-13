@@ -65,7 +65,7 @@ export default class JoinChallengeScreen extends React.Component {
         }
 
         userInfo = {};
-        let userKey = 'UIDtoInfo.' + auth().currentUser.uid;
+        let userKey = 'UIDToInfo.' + auth().currentUser.uid;
         userInfo[userKey] = {name: fullName, taskDates: taskDates}
 
         firestore().collection('Challenges').doc(challengeID).update(userInfo);

@@ -42,6 +42,15 @@ const Styling = {
       width: '100%',
       padding: 12,
     },
+    horizontalCard: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      width: '100%',
+      padding: 12,
+      marginVertical: 6,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     row: {
       flexDirection: 'row',
       alignItems: 'center',
