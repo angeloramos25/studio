@@ -55,6 +55,8 @@ export default class AdminChallengeDetailScreen extends React.Component {
           title={this.state.challenge ? this.state.challenge.name : 'Loading...'}
           leftButtonImage="back"
           onLeftPress={() => this.props.navigation.goBack()}
+          rightButtonImage="info"
+          onRightPress={() => this.props.navigation.navigate('ChallengeInfo', { challenge: this.state.challenge })}
         />
         <SafeAreaView style={Styling.containers.wrapper}>
           <View style={{...Styling.containers.row, backgroundColor: 'white', width: '100%' }}>

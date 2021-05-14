@@ -33,6 +33,7 @@ import AddPostScreen from './screens/AddPostScreen';
 
 // Shared screens
 import LikesListScreen from './screens/LikesListScreen';
+import ChallengeInfoScreen from './screens/ChallengeInfoScreen';
 
 const OnboardingStack = createStackNavigator();
 function OnboardingStackScreen() {
@@ -145,6 +146,7 @@ export default class App extends React.Component {
           <Stack.Screen name="Onboarding" component={OnboardingStackScreen} />
           <Stack.Screen name="ChallengeCreation" component={ChallengeCreationStackScreen} />
           <Stack.Screen name="AddPost" component={AddPostScreen} />
+          <Stack.Screen name="ChallengeInfo" component={ChallengeInfoScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
