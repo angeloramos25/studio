@@ -81,6 +81,7 @@ export default class ChallengesScreen extends React.Component {
             {this.state.challenges && this.state.challenges.map(challenge =>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminChallengeDetail', { challengeID: challenge.id })} style={{...Styling.containers.card, marginTop: 24 }}>
                 <Text style={Styling.text.header}>{challenge.name}</Text>
+                <Text style={{...Styling.text.body, color: 'gray'}}>{Object.keys(challenge.UIDToInfo).length} participants</Text>
               </TouchableOpacity>
             )}
           </ScrollView>
