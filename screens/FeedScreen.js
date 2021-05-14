@@ -43,17 +43,16 @@ export default class FeedScreen extends React.Component {
   async componentDidMount() {
     // auth().signOut();
     this.loadPosts();
-    // this._unsubscribe = this.props.navigation.addListener('focus', () => {
-    //   if (this.props.route.params && this.props.route.params.shouldRefresh) {
-    //     this.loadPosts();
-    //     this.props.route.params.shouldRefresh = false;
-    //   }
-    // });
   }
 
-  componentWillUnmount() {
-    // this._unsubscribe();
+  componentDidUpdate(prevProps) {
+    if (!prevProps.shouldRefresh && this.props.shouldRefresh) {
+      console.log('breh');
+      this.loadPosts();
+      this.props.onFeedLoad();
+    }
   }
+
 
   async handleLikePressed(postID) {
     const firstName = await AsyncStorage.getItem('first_name');
@@ -247,6 +246,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     bottom: 96,
-    right: 12,
+    right: 0,
   }
 });

@@ -16,6 +16,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import ActionSheet from 'react-native-actionsheet';
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Images from '../assets/Images.js';
 import Styling from '../constants/Styling';
@@ -123,7 +124,13 @@ export default class AddPostScreen extends React.Component {
     }
 
     this.setState({ isSaving: false });
-    this.props.navigation.navigate('UserChallengeDetail', {
+
+    let isAdmin = await AsyncStorage.getItem('is_admin');
+    if (isAdmin) {
+      isAdmin = JSON.parse(isAdmin);
+    }
+
+    this.props.navigation.navigate(isAdmin ? 'AdminChallengeDetail' : 'UserChallengeDetail', {
       shouldRefresh: true,
     });
   }
@@ -136,9 +143,6 @@ export default class AddPostScreen extends React.Component {
           leftButtonText="Cancel"
           leftButtonColor="red"
           onLeftPress={() => this.props.navigation.goBack()}
-          rightButtonText="Finish"
-          rightButtonColor={Styling.colors.primary}
-          onRightPress={this.addPost}
         />
         <SafeAreaView style={{...Styling.containers.wrapper, flex: 1 }}>
           <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ paddingBottom: 196 }} ref={scrollView => this.scrollView = scrollView} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>

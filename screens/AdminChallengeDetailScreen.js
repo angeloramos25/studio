@@ -24,6 +24,7 @@ export default class AdminChallengeDetailScreen extends React.Component {
       currentTab: 'Leaderboard',
       challenge: null,
       user: null,
+      shouldRefresh: false,
     }
   }
 
@@ -38,6 +39,15 @@ export default class AdminChallengeDetailScreen extends React.Component {
       const challenge = { id: challengeDoc.id, ...challengeDoc._data }
       this.setState({ user, challenge });
     }
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      if (this.props.route.params && this.props.route.params.shouldRefresh) {
+        this.setState({ shouldRefresh: true });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
   }
 
   render() {
@@ -45,7 +55,7 @@ export default class AdminChallengeDetailScreen extends React.Component {
     if (this.state.challenge) {
       screens = {
         'Leaderboard': <LeaderboardScreen challenge={this.state.challenge} />,
-        'Feed': <FeedScreen navigation={this.props.navigation} user={this.state.user} challenge={this.state.challenge} />,
+        'Feed': <FeedScreen onFeedLoad={() => this.setState({ shouldRefresh: false })} shouldRefresh={this.state.shouldRefresh} navigation={this.props.navigation} user={this.state.user} challenge={this.state.challenge} />,
       }
     }
 
