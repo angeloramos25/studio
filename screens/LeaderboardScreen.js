@@ -36,6 +36,8 @@ export default class LeaderboardScreen extends React.Component {
       return first[1] < second[1];
     })
 
+    let currUID = auth().currentUser.uid;
+
     return(
       <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
         <ScrollView>
@@ -46,7 +48,7 @@ export default class LeaderboardScreen extends React.Component {
               <Text style={{ ...Styling.text.subheader }}>Points</Text>
             </View>
             {uidPoints.map((tuple, index) =>
-              <View style={{...Styling.containers.horizontalCard, alignItems: 'center', justifyContent: 'space-around'}}>
+              <View style={{...Styling.containers.horizontalCard, alignItems: 'center', justifyContent: 'space-around', borderColor: 'black', borderWidth: currUID === tuple[0] ? 1 : 0}}>
                 <Text style={{ ...Styling.text.body }}>{index+1}</Text>
                 <Text style={Styling.text.subheader}>
                   {this.props.challenge.UIDToInfo[tuple[0]].name}
