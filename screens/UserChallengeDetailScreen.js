@@ -100,6 +100,8 @@ export default class UserChallengeDetailScreen extends React.Component {
       <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
         <TopBar
           title={this.state.challenge ? this.state.challenge.name : 'Loading...'}
+          rightButtonImage="info"
+          onRightPress={() => this.props.navigation.navigate('ChallengeInfo', { challenge: this.state.challenge })}
         />
         <SafeAreaView style={Styling.containers.wrapper}>
           <View style={{...Styling.containers.row, backgroundColor: 'white', width: '100%' }}>
