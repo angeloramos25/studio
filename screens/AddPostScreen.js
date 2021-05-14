@@ -99,8 +99,11 @@ export default class AddPostScreen extends React.Component {
 
     const userDoc = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
 
+    const challenge = this.props.route.params.challenge;
+
     const postObj = {
       userID: auth().currentUser.uid,
+      displayName: challenge.UIDToInfo[auth().currentUser.uid].name,
       title: this.state.title,
       description: this.state.description,
       timestamp: (new Date()).getTime(),
@@ -111,7 +114,7 @@ export default class AddPostScreen extends React.Component {
 
     this.setState({ isSaving: true });
 
-    const newPostID = (await firestore().collection('Challenges/' + this.props.route.params.challenge.id + '/Feed').add(postObj)).id;
+    const newPostID = (await firestore().collection('Challenges/' + challenge.id + '/Feed').add(postObj)).id;
 
     if (this.state.image) {
       const reference = storage().ref(newPostID + '.jpg');

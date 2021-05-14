@@ -16,6 +16,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import DoubleClick from 'react-native-double-tap';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Images from '../assets/Images.js';
 import Styling from '../constants/Styling';
@@ -55,9 +56,11 @@ export default class FeedScreen extends React.Component {
   }
 
   async handleLikePressed(postID) {
+    const firstName = await AsyncStorage.getItem('first_name');
+    const lastName = await AsyncStorage.getItem('last_name');
     const likeObj = {
       userID: auth().currentUser.uid,
-      displayName: this.state.user.firstName + ' ' + this.state.user.lastName,
+      displayName: firstName + ' ' + lastName,
     }
     const activities = this.state.activities;
     const isAlreadyLiked = activities.find(a => a.id === postID).likes.some(l => l.userID === auth().currentUser.uid);
@@ -65,30 +68,16 @@ export default class FeedScreen extends React.Component {
     const activity = activities[postIndex];
 
     if (isAlreadyLiked) {
-      await firestore().collection('Activities').doc(postID).update({
+      await firestore().collection('Challenges/' + this.props.challenge.id + '/Feed').doc(postID).update({
         likes: firestore.FieldValue.arrayRemove(likeObj),
       });
 
       const likeIndex = activities[postIndex].likes.findIndex(l => l.userID === auth().currentUser.uid)
       activities[postIndex].likes.splice(likeIndex, 1);
     } else {
-      await firestore().collection('Activities').doc(postID).update({
+      await firestore().collection('Challenges/' + this.props.challenge.id + '/Feed').doc(postID).update({
         likes: firestore.FieldValue.arrayUnion(likeObj),
       });
-
-      if (auth().currentUser.uid !== activity.userID) {
-        await firestore().collection('Users').doc(activity.userID).update({
-          notifications: firestore.FieldValue.arrayUnion({
-            type: 'like',
-            postTitle: activity.title,
-            postID: activity.id,
-            authorID: auth().currentUser.uid,
-            authorUsername: this.state.user.username,
-            displayName: this.state.user.firstName + ' ' + this.state.user.lastName,
-            timestamp: (new Date()).getTime(),
-          }),
-        });
-      }
       activities[activities.findIndex(a => a.id === postID)].likes.push(likeObj);
     }
 
@@ -137,34 +126,21 @@ export default class FeedScreen extends React.Component {
   async postComment(postID) {
     const commentInputs = this.state.commentInputs;
     this.setState({ inputLoading: this.state.inputLoading.concat([postID] )});
+    const firstName = await AsyncStorage.getItem('first_name');
+    const lastName = await AsyncStorage.getItem('last_name');
     const commentObj = {
       authorID: auth().currentUser.uid,
-      authorUsername: this.state.user.username,
+      authorDisplayName: firstName + ' ' + lastName,
       text: commentInputs[postID]
     };
 
-    await firestore().collection('Activities').doc(postID).update({
+    await firestore().collection('Challenges/' + this.props.challenge.id + '/Feed').doc(postID).update({
       comments: firestore.FieldValue.arrayUnion(commentObj),
     });
 
     const activities = this.state.activities;
     activities[activities.findIndex(a => a.id === postID)].comments.push(commentObj);
     const activity = activities[activities.findIndex(a => a.id === postID)];
-
-    if (auth().currentUser.uid !== activity.userID) {
-      await firestore().collection('Users').doc(activity.userID).update({
-        notifications: firestore.FieldValue.arrayUnion({
-          type: 'comment',
-          postTitle: activity.title,
-          postID: activity.id,
-          authorID: auth().currentUser.uid,
-          authorUsername: this.state.user.username,
-          displayName: this.state.user.firstName + ' ' + this.state.user.lastName,
-          commentText: commentInputs[postID],
-          timestamp: (new Date()).getTime(),
-        }),
-      });
-    }
 
     commentInputs[postID] = '';
 
@@ -200,10 +176,7 @@ export default class FeedScreen extends React.Component {
                 style={{ marginTop: 24 }}
               >
                 <View style={{...Styling.containers.row, justifyContent: 'space-between' }}>
-                  <TouchableOpacity style={Styling.containers.row} onPress={() => props.navigation.navigate('ProfilePopup', { uid: item.userID })}>
-                    <Image style={{ width: 40, height: 40, borderRadius: 20, marginRight: 8 }} source={{ uri: item.profilePicUrl }} />
-                    <Text style={Styling.text.header}>{item.username}</Text>
-                  </TouchableOpacity>
+                  <Text style={Styling.text.bodyLarge}>{item.displayName}</Text>
                   <Text style={Styling.text.body}>{daysAgo(item.timestamp)}</Text>
                 </View>
                 <DoubleClick doubleTap={() => this.handleLikePressed(item.id)}>
@@ -220,7 +193,7 @@ export default class FeedScreen extends React.Component {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('LikesList', { likes: item.likes })}>
-                    <Text style={Styling.text.header}>{item.likes.length + ' likes'}</Text>
+                    <Text style={Styling.text.bodyLarge}>{item.likes.length + ' likes'}</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={{...Styling.containers.card, ...Styling.containers.row, marginTop: 12, padding: 4 }}>
@@ -242,17 +215,15 @@ export default class FeedScreen extends React.Component {
                     <ActivityIndicator size="small" color="black" animating={true}/>
                     :
                     <TouchableOpacity disabled={!this.state.commentInputs[item.id]} onPress={() => this.postComment(item.id)}>
-                      <Text style={{...Styling.text.cta, flex: 2, marginTop: 4, marginRight: 4, color: this.state.commentInputs[item.id] ? Styling.colors.primary : 'lightgray' }}>Post</Text>
+                      <Text style={{...Styling.text.body, flex: 2, marginTop: 4, marginRight: 4, color: this.state.commentInputs[item.id] ? Styling.colors.primary : 'lightgray' }}>Post</Text>
                     </TouchableOpacity>
                   }
                 </View>
                 <View style={{ marginTop: 8 }}>
                   {item.comments.map(comment =>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('ProfilePopup', { uid: comment.authorID })} style={{ marginTop: 4 }} key={comment.authorID + comment.text}>
-                      <Text style={{...Styling.text.subheader}}>{comment.authorUsername}
-                        <Text style={Styling.text.body}>{' ' + comment.text}</Text>
-                      </Text>
-                    </TouchableOpacity>
+                    <Text style={Styling.text.body}>{comment.authorDisplayName}
+                      <Text style={Styling.text.body}>{': ' + comment.text}</Text>
+                    </Text>
                   )}
                 </View>
               </View>

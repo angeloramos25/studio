@@ -15,13 +15,7 @@ import {
 export default function PostCard(props) {
   return (
     <View style={{...Styling.containers.card, marginTop: 12 }}>
-      <View style={{...Styling.containers.row, justifyContent: 'space-between', marginBottom: 8 }}>
-        <View style={Styling.containers.row}>
-          <Text style={Styling.text.header}>{props.title}</Text>
-          <Text style={Styling.text.label}>Custom</Text>
-        </View>
-        <Text style={Styling.text.body}>{getPrettyDateString(props.timestamp)}</Text>
-      </View>
+      <Text style={Styling.text.header}>{props.title}</Text>
       <Text style={{...Styling.text.body, marginTop: 4 }}>{props.description}</Text>
       {props.imageUrl && <Image source={{ uri: props.imageUrl }} style={{ width: '100%', height: undefined, aspectRatio: 1, marginTop: 12, borderRadius: 10 }} />}
     </View>
