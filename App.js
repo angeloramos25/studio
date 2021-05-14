@@ -22,6 +22,7 @@ import JoinChallengeScreen from './screens/onboarding/JoinChallengeScreen';
 
 //Admin challenges stack
 import ChallengesScreen from './screens/ChallengesScreen';
+import AdminChallengeDetailScreen from './screens/AdminChallengeDetailScreen';
 import ChallengeBasicInfoScreen from './screens/ChallengeBasicInfoScreen';
 import ChallengeAddTasksScreen from './screens/ChallengeAddTasksScreen';
 
@@ -37,6 +38,7 @@ function OnboardingStackScreen() {
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: '#FAFAFA' },
+        gestureEnabled: false,
       }}
     >
       <OnboardingStack.Screen name="UserType" component={UserTypeScreen} />
@@ -54,6 +56,7 @@ function ChallengeCreationStackScreen() {
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: '#FAFAFA' },
+        gestureEnabled: false,
       }}
     >
       <ChallengeCreationStack.Screen name="ChallengeBasicInfo" component={ChallengeBasicInfoScreen} />
@@ -62,18 +65,19 @@ function ChallengeCreationStackScreen() {
   )
 }
 
-const UserChallengeStack = createStackNavigator();
-function UserChallengeStackScreen() {
+const AdminChallengeStack = createStackNavigator();
+function AdminChallengeStackScreen() {
   return(
-    <UserChallengeStack.Navigator
+    <AdminChallengeStack.Navigator
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: '#FAFAFA' },
+        gestureEnabled: false,
       }}
     >
-      <UserChallengeStack.Screen name="UserChallenges" component={UserChallengesScreen} />
-      <UserChallengeStack.Screen name="UserChallengeDetailScreen" component={UserChallengeDetailScreen} />
-    </UserChallengeStack.Navigator>
+      <AdminChallengeStack.Screen name="AdminChallenges" component={ChallengesScreen} />
+      <AdminChallengeStack.Screen name="AdminChallengeDetail" component={AdminChallengeDetailScreen} />
+    </AdminChallengeStack.Navigator>
   )
 }
 
@@ -112,11 +116,12 @@ export default class App extends React.Component {
           initialRouteName={this.state.isAdmin ? 'AdminChallenges' : 'UserChallengeDetail'}
           screenOptions={{
             headerShown: false,
+            gestureEnabled: false,
           }}
           mode="modal"
         >
           <Stack.Screen name="UserChallengeDetail" component={UserChallengeDetailScreen} />
-          <Stack.Screen name="AdminChallenges" component={ChallengesScreen} />
+          <Stack.Screen name="AdminChallenges" component={AdminChallengeStackScreen} />
           <Stack.Screen name="Onboarding" component={OnboardingStackScreen} />
           <Stack.Screen name="ChallengeCreation" component={ChallengeCreationStackScreen} />
           <Stack.Screen name="AddPost" component={AddPostScreen} />

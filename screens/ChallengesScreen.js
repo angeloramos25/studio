@@ -51,7 +51,7 @@ export default class ChallengesScreen extends React.Component {
               style={{ marginTop: 24 }}
             />
             {this.state.challenges && this.state.challenges.map(challenge =>
-              <TouchableOpacity style={{...Styling.containers.card, marginTop: 24 }}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminChallengeDetail')} style={{...Styling.containers.card, marginTop: 24 }}>
                 <Text style={Styling.text.header}>{challenge.name}</Text>
               </TouchableOpacity>
             )}
