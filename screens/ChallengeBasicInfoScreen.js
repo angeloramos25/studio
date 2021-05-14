@@ -6,6 +6,8 @@ import {
   View,
   TextInput,
 } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 import Images from '../assets/Images.js';
 import Styling from '../constants/Styling';
@@ -20,7 +22,45 @@ export default class ChallengeBasicInfoScreen extends React.Component {
       challengeName: '',
       description: '',
       challengeJoinCode: '',
+      errorMessage: '',
+      isLoading: false,
     }
+    this.continuePress = this.continuePress.bind(this);
+  }
+
+  async continuePress() {
+    let errorMessage;
+    if (this.state.challengeName === '') {
+      errorMessage = 'Please enter a challenge name.';
+    } else if (this.state.description === '') {
+      errorMessage = 'Please enter a description.';
+    } else if (this.state.challengeJoinCode === '') {
+      errorMessage = 'Please enter a challenge join code.';
+    }
+
+    if (errorMessage) {
+      this.setState({ errorMessage });
+      return;
+    } else {
+      this.setState({errorMessage: ''});
+    }
+
+    this.setState({ isLoading: true });
+
+    await firestore().collection('Challenges').where('challengeJoinCode', '==', this.state.challengeJoinCode).get().then(querySnapshot => {
+      if (querySnapshot.size !== 0) {
+        errorMessage = 'Challenge code is already in use.';
+      }
+    });
+
+    if (errorMessage) {
+      this.setState({isLoading: false, errorMessage });
+      return;
+    } else {
+      this.setState({errorMessage: ''});
+    }
+
+    this.props.navigation.navigate('ChallengeAddTasks', this.state)
   }
 
   render() {
@@ -59,11 +99,15 @@ export default class ChallengeBasicInfoScreen extends React.Component {
             />
           </View>
           <Button
-            onPress={() => this.props.navigation.navigate('ChallengeAddTasks', this.state)}
+            onPress={this.continuePress}
             text="Continue"
             type="cta"
             style={{ marginTop: 24 }}
+            loading={this.state.isLoading}
           />
+          {this.state.errorMessage !== '' &&
+            <Text style={{...Styling.text.body, color: 'red', textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>
+          }
         </SafeAreaView>
       </View>
     )

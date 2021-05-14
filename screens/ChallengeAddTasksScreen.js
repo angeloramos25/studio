@@ -6,6 +6,7 @@ import {
   View,
   TextInput,
   ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
@@ -26,8 +27,11 @@ export default class ChallengeAddTasksScreen extends React.Component {
         pointValue: '',
         description: '',
       }],
+      errorMessage: '',
+      isLoading: false,
     }
     this.createChallenge = this.createChallenge.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
   }
 
   async createChallenge() {
@@ -35,6 +39,22 @@ export default class ChallengeAddTasksScreen extends React.Component {
     const challengeName = this.props.route.params.challengeName;
     const challengeDescription = this.props.route.params.description;
     const challengeJoinCode = this.props.route.params.challengeJoinCode;
+
+    let errorMessage;
+    for (let task of this.state.tasks) {
+      if (task.name === '') {
+        errorMessage = 'Please enter a name for every task.'
+      } else if (task.pointValue === '') {
+        errorMessage = 'Pleae enter a point value for every task.'
+      }
+    }
+
+    if (errorMessage) {
+      this.setState({ errorMessage });
+      return;
+    } else {
+      this.setState({errorMessage: '', isLoading: true});
+    }
 
     const challengeID = (await firestore().collection('Challenges').add({
       name: challengeName,
@@ -51,6 +71,12 @@ export default class ChallengeAddTasksScreen extends React.Component {
     this.props.navigation.navigate('AdminChallenges');
   }
 
+  deleteTask() {
+    let tasks = this.state.tasks;
+    tasks.pop();
+    this.setState(tasks);
+  }
+
   render() {
     return(
       <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
@@ -59,9 +85,6 @@ export default class ChallengeAddTasksScreen extends React.Component {
           leftButtonText="Back"
           leftButtonColor={Styling.colors.primary}
           onLeftPress={() => this.props.navigation.goBack()}
-          rightButtonText="Finish"
-          rightButtonColor={Styling.colors.primary}
-          onRightPress={this.createChallenge}
         />
         <SafeAreaView style={{...Styling.containers.wrapper, flex: 1 }}>
           <ScrollView contentContainerStyle={{ paddingBottom: 48 }} showsVerticalScrollIndicator={false}>
@@ -108,6 +131,11 @@ export default class ChallengeAddTasksScreen extends React.Component {
                   value={this.state.tasks[taskIndex].description}
                 />
               </View>
+              { taskIndex !== 0 && taskIndex === this.state.tasks.length - 1 &&
+              <TouchableOpacity style={styles.deleteButton} onPress={this.deleteTask}>
+                <Text style={{color: 'white', fontSize: 20}}>-</Text>
+              </TouchableOpacity>
+              }
             </View>
           )}
           <Button
@@ -129,7 +157,11 @@ export default class ChallengeAddTasksScreen extends React.Component {
             text="Create Challenge"
             type="cta"
             style={{ marginTop: 24 }}
+            loading={this.state.isLoading}
           />
+          {this.state.errorMessage !== '' &&
+            <Text style={{...Styling.text.body, color: 'red', textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>
+          }
           </ScrollView>
         </SafeAreaView>
       </View>
@@ -138,5 +170,15 @@ export default class ChallengeAddTasksScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
+  deleteButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 30,
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 0,
+    top: -10,
+  }
 });
