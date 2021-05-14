@@ -27,6 +27,7 @@ export default class UserChallengeDetailScreen extends React.Component {
       user: null,
     }
     this.handleTaskComplete = this.handleTaskComplete.bind(this);
+    this.handleUndoTask = this.handleUndoTask.bind(this);
   }
 
   async componentDidMount() {
@@ -43,20 +44,33 @@ export default class UserChallengeDetailScreen extends React.Component {
   }
 
   async handleTaskComplete(taskName) {
-    const uid = 'HONQrly1LYRKuWhXz8URugMyDdB2';
+    const uid = auth().currentUser.uid;
     const fieldName = 'UIDToInfo.' + uid + '.taskDates.' + taskName;
-    const challenge = (await firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').update({
+    firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').update({
       [fieldName]: firestore.FieldValue.arrayUnion(new Date()),
-    }));
+    });
+    const challenge = this.state.challenge;
+    challenge.UIDToInfo[uid].taskDates[taskName].push({seconds: (new Date).getTime()/1000});
+    this.setState({ challenge });
+  }
+
+  async handleUndoTask(taskName) {
+    const uid = auth().currentUser.uid;
+    const challenge = this.state.challenge;
+    challenge.UIDToInfo[uid].taskDates[taskName].pop();
+
+    const fieldName = 'UIDToInfo.' + uid + '.taskDates.' + taskName;
+    firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').update({
+      [fieldName]: challenge.UIDToInfo[uid].taskDates[taskName],
+    });
     this.setState({ challenge });
   }
 
   render() {
-
     let screens;
     if (this.state.challenge) {
       screens = {
-        'Tasks': <TasksScreen handleTaskComplete={this.handleTaskComplete} tasks={this.state.challenge.tasks} />,
+        'Tasks': <TasksScreen handleTaskComplete={this.handleTaskComplete} handleUndoTask={this.handleUndoTask} tasks={this.state.challenge.tasks} taskDates={this.state.challenge.UIDToInfo[auth().currentUser.uid].taskDates} />,
         'Feed': <FeedScreen navigation={this.props.navigation} user={this.state.user} challenge={this.state.challenge} />,
         'Leaderboard': <LeaderboardScreen challenge={this.state.challenge} />
       }

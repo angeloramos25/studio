@@ -14,19 +14,46 @@ import TopBar from '../components/TopBar';
 
 export default class TasksScreen extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.alreadyCompleted = this.alreadyCompleted.bind(this);
+    this.isInSameDay = this.isInSameDay.bind(this);
+  }
+
+  alreadyCompleted(task) {
+    let dates = this.props.taskDates[task.name];
+    let today = new Date();
+    for (let date of dates) {
+      if (this.isInSameDay(new Date(date.seconds * 1000), today)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isInSameDay(first, second) {
+    return first.getFullYear() === second.getFullYear() && first.getMonth() === second.getMonth() && first.getDate() === second.getDate();
+  }
+
   render() {
     return(
       <View style={{ backgroundColor: '#FAFAFA', flex: 1, marginTop: 24 }}>
           <View style={{ flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'space-around'}}>
             {this.props.tasks.map(task =>
-              <View style={{...Styling.containers.card, alignItems: 'center', justifyContent: 'space-around', width: '40%', height: 150 }}>
+              <View key={task.name} style={{...Styling.containers.card, alignItems: 'center', justifyContent: 'space-around', width: '40%', height: 150, backgroundColor: this.alreadyCompleted(task) ? '#75DAAD' : 'white' }}>
                 <Text style={Styling.text.header}>
                   {task.name}
                 </Text>
                 <Text style={{ ...Styling.text.body }}>Done 1 time(s) today</Text>
+                { !this.alreadyCompleted(task) ?
                 <TouchableOpacity style={styles.circleButton} onPress={() => this.props.handleTaskComplete(task.name)}>
                   <Text style={{ color: 'white', fontSize: 16 }}>+</Text>
                 </TouchableOpacity>
+                :
+                <TouchableOpacity style={{height: 40, justifyContent: 'center'}} onPress={() => this.props.handleUndoTask(task.name)}>
+                  <Text style={{ color: 'red', fontSize: 16 }}>Undo</Text>
+                </TouchableOpacity>
+                }
               </View>
             )}
           </View>
