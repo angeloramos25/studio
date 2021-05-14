@@ -53,7 +53,7 @@ export default class JoinChallengeScreen extends React.Component {
 
     const documentSnapshot = querySnapshot.docs[0];
     let challengeID = documentSnapshot.id;
-    let challengeData = documentSnapshot.data()
+    let challengeData = documentSnapshot.data();
 
     await firestore().collection('Clients').doc(auth().currentUser.uid).update({
       challengeIDs: firestore.FieldValue.arrayUnion(challengeID)
@@ -70,7 +70,7 @@ export default class JoinChallengeScreen extends React.Component {
 
     await firestore().collection('Challenges').doc(challengeID).update(userInfo);
 
-    this.props.navigation.navigate('UserChallenges');
+    this.props.navigation.navigate('UserChallenges', { challengeID: challengeID });
 
     this.setState({ isLoading: false });
 

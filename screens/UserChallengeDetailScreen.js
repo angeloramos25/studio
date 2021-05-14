@@ -41,9 +41,16 @@ export default class UserChallengeDetailScreen extends React.Component {
       const challenge = { id: challengeDoc.id, ...challengeDoc._data }
       this.setState({ user, challenge });
     }
-    this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      if (this.props.route.params && this.props.route.params.shouldRefresh) {
-        this.setState({ shouldRefresh: true });
+    this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+      if (this.props.route.params) {
+        if (this.props.route.params.shouldRefresh) {
+          this.setState({ shouldRefresh: true });
+        } else {
+          const user = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
+          const challengeDoc = await firestore().collection('Challenges').doc(user.challengeIDs[0]).get();
+          const challenge = { id: challengeDoc.id, ...challengeDoc._data }
+          this.setState({ user, challenge });
+        }
       }
     });
   }
