@@ -82,8 +82,7 @@ export default class ChallengeAddTasksScreen extends React.Component {
       <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
         <TopBar
           title="Add Tasks"
-          leftButtonText="Back"
-          leftButtonColor={Styling.colors.primary}
+          leftButtonImage="back"
           onLeftPress={() => this.props.navigation.goBack()}
         />
         <SafeAreaView style={{...Styling.containers.wrapper, flex: 1 }}>

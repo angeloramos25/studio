@@ -146,7 +146,6 @@ export default class AddPostScreen extends React.Component {
         />
         <SafeAreaView style={{...Styling.containers.wrapper, flex: 1 }}>
           <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ paddingBottom: 196 }} ref={scrollView => this.scrollView = scrollView} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-            {this.state.errorMessage !== '' && <Text style={{...Styling.text.header, color: 'red', textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>}
             <View style={{...Styling.containers.card, marginTop: 24 }}>
               <Text style={Styling.text.header}>Title</Text>
               <TextInput
@@ -158,10 +157,10 @@ export default class AddPostScreen extends React.Component {
               />
             </View>
             <View style={{...Styling.containers.card, marginTop: 24 }}>
-              <Text style={Styling.text.header}>Description</Text>
+              <Text style={Styling.text.header}>Caption</Text>
               <TextInput
                 style={Styling.textfields.floating}
-                placeholder="Add a description..."
+                placeholder="Add a caption..."
                 placeholderTextColor="lightgray"
                 onChangeText={text => this.setState({ description: text })}
                 value={this.state.description}
@@ -193,6 +192,7 @@ export default class AddPostScreen extends React.Component {
               onPress={this.addPost}
               style={{ marginTop: 24 }}
             />
+            {this.state.errorMessage !== '' && <Text style={{...Styling.text.body, color: 'red', textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>}
           </ScrollView>
         </SafeAreaView>
         <ActionSheet

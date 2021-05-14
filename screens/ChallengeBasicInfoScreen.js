@@ -57,7 +57,7 @@ export default class ChallengeBasicInfoScreen extends React.Component {
       this.setState({isLoading: false, errorMessage });
       return;
     } else {
-      this.setState({errorMessage: ''});
+      this.setState({errorMessage: '', isLoading: false});
     }
 
     this.props.navigation.navigate('ChallengeAddTasks', this.state)
