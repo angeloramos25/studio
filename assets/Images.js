@@ -5,6 +5,7 @@ const Images = {
   heart_filled: require('./images/heart_filled.png'),
   back: require('./images/back.png'),
   info: require('./images/info.png'),
+  logo: require('./images/logo.png'),
 }
 
 export default Images;
