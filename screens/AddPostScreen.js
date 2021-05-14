@@ -111,7 +111,7 @@ export default class AddPostScreen extends React.Component {
 
     this.setState({ isSaving: true });
 
-    const newPostID = (await firestore().collection('Challenges/' + this.props.route.params.challengeID + '/Feed').add(postObj)).id;
+    const newPostID = (await firestore().collection('Challenges/' + this.props.route.params.challenge.id + '/Feed').add(postObj)).id;
 
     if (this.state.image) {
       const reference = storage().ref(newPostID + '.jpg');
@@ -131,7 +131,7 @@ export default class AddPostScreen extends React.Component {
         <TopBar
           title="Add Post"
           leftButtonText="Cancel"
-          leftButtonColor={Styling.colors.red}
+          leftButtonColor="red"
           onLeftPress={() => this.props.navigation.goBack()}
           rightButtonText="Finish"
           rightButtonColor={Styling.colors.primary}
@@ -139,7 +139,7 @@ export default class AddPostScreen extends React.Component {
         />
         <SafeAreaView style={{...Styling.containers.wrapper, flex: 1 }}>
           <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ paddingBottom: 196 }} ref={scrollView => this.scrollView = scrollView} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-            {this.state.errorMessage !== '' && <Text style={{...Styling.text.header, color: Styling.colors.red, textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>}
+            {this.state.errorMessage !== '' && <Text style={{...Styling.text.header, color: 'red', textAlign: 'center', marginTop: 12 }}>{this.state.errorMessage}</Text>}
             <View style={{...Styling.containers.card, marginTop: 24 }}>
               <Text style={Styling.text.header}>Title</Text>
               <TextInput
@@ -161,7 +161,7 @@ export default class AddPostScreen extends React.Component {
               />
             </View>
             <View style={{...Styling.containers.card, marginTop: 24 }}>
-              <Text style={Styling.text.header}>Picture (optional)</Text>
+              <Text style={Styling.text.header}>Picture</Text>
               {this.state.image ?
                 <TouchableOpacity
                   style={{ marginTop: 12 }}
@@ -171,12 +171,12 @@ export default class AddPostScreen extends React.Component {
                   <Text style={{...Styling.text.subheader, color: Styling.colors.primary, marginTop: 12 }}>Change Image</Text>
                 </TouchableOpacity>
                 :
-                <TouchableOpacity
+                <Button
                   style={{ marginTop: 12 }}
                   onPress={() => this.ActionSheet.show()}
-                >
-                  <Text style={{...Styling.text.subheader, color: Styling.colors.primary }}>Add Image</Text>
-                </TouchableOpacity>
+                  type="outline"
+                  text="+ Add Image"
+                />
               }
             </View>
             <Button

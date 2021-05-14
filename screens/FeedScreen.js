@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import DoubleClick from 'react-native-double-tap';
 
 import Images from '../assets/Images.js';
@@ -40,7 +41,7 @@ export default class FeedScreen extends React.Component {
 
   async componentDidMount() {
     // auth().signOut();
-    // this.loadPosts();
+    this.loadPosts();
     // this._unsubscribe = this.props.navigation.addListener('focus', () => {
     //   if (this.props.route.params && this.props.route.params.shouldRefresh) {
     //     this.loadPosts();
@@ -199,7 +200,7 @@ export default class FeedScreen extends React.Component {
                 style={{ marginTop: 24 }}
               >
                 <View style={{...Styling.containers.row, justifyContent: 'space-between' }}>
-                  <TouchableOpacity style={Styling.containers.row} onPress={() => this.props.navigation.navigate('ProfilePopup', { uid: item.userID })}>
+                  <TouchableOpacity style={Styling.containers.row} onPress={() => props.navigation.navigate('ProfilePopup', { uid: item.userID })}>
                     <Image style={{ width: 40, height: 40, borderRadius: 20, marginRight: 8 }} source={{ uri: item.profilePicUrl }} />
                     <Text style={Styling.text.header}>{item.username}</Text>
                   </TouchableOpacity>
@@ -257,7 +258,7 @@ export default class FeedScreen extends React.Component {
               </View>
             )}}
           />
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddPost')} style={styles.postButton}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddPost', { challenge: this.props.challenge })} style={styles.postButton}>
             <Text style={{ fontSize: 24, color: 'white' }}>+</Text>
           </TouchableOpacity>
       </View>

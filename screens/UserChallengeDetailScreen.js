@@ -48,7 +48,6 @@ export default class UserChallengeDetailScreen extends React.Component {
     const challenge = (await firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').update({
       [fieldName]: firestore.FieldValue.arrayUnion(new Date()),
     }));
-    console.log(challenge);
     this.setState({ challenge });
   }
 
@@ -58,7 +57,7 @@ export default class UserChallengeDetailScreen extends React.Component {
     if (this.state.challenge) {
       screens = {
         'Tasks': <TasksScreen handleTaskComplete={this.handleTaskComplete} tasks={this.state.challenge.tasks} />,
-        'Feed': <FeedScreen user={this.state.user} challenge={this.state.challenge} />
+        'Feed': <FeedScreen navigation={this.props.navigation} user={this.state.user} challenge={this.state.challenge} />,
         'Leaderboard': <LeaderboardScreen challenge={this.state.challenge} />
       }
     }
