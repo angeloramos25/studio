@@ -86,7 +86,7 @@ export default class ChallengeAddTasksScreen extends React.Component {
           onLeftPress={() => this.props.navigation.goBack()}
         />
         <SafeAreaView style={{...Styling.containers.wrapper, flex: 1 }}>
-          <ScrollView contentContainerStyle={{ paddingBottom: 48 }} showsVerticalScrollIndicator={false}>
+          <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 300 }} showsVerticalScrollIndicator={false}>
           <Text style={{...Styling.text.body, marginTop: 24}}>
             Tasks are items that your clients can complete daily to earn points during your challenge. Examples: Exercise for 45 min, Drink 8 cups of water, Sleep for 8 hours, etc.
           </Text>
@@ -120,8 +120,7 @@ export default class ChallengeAddTasksScreen extends React.Component {
               <View style={{ marginTop: 12 }}>
                 <Text style={Styling.text.label}>Description</Text>
                 <TextInput
-                  style={{...Styling.textfields.outline, height: 100 }}
-                  multiline={true}
+                  style={{...Styling.textfields.outline }}
                   onChangeText={text => {
                     const tasks = this.state.tasks;
                     tasks[taskIndex].description = text;

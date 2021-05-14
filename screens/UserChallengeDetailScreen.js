@@ -33,10 +33,14 @@ export default class UserChallengeDetailScreen extends React.Component {
   async componentDidMount() {
     // auth().signOut();
     const user = auth().currentUser;
-    if (!user) {
+    if (!user ) {
       this.props.navigation.navigate('Onboarding');
     } else {
       const user = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
+      if (user.challengeIDs.length === 0) {
+        this.props.navigation.navigate('Onboarding');
+        return;
+      }
       const challengeDoc = await firestore().collection('Challenges').doc(user.challengeIDs[0]).get();
       const challenge = { id: challengeDoc.id, ...challengeDoc._data }
       this.setState({ user, challenge });
