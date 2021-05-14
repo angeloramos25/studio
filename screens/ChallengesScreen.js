@@ -51,7 +51,7 @@ export default class ChallengesScreen extends React.Component {
       promises.push(firestore().collection('Challenges').doc(id).get());
     }
     Promise.all(promises).then(values =>
-      this.setState({ challenges: values.map(doc => doc._data )})
+      this.setState({ challenges: values.map(doc => ({ id: doc.id, ...doc._data }))})
     );
     this.setState({ refreshing: false });
   }
@@ -79,7 +79,7 @@ export default class ChallengesScreen extends React.Component {
               style={{ marginTop: 24 }}
             />
             {this.state.challenges && this.state.challenges.map(challenge =>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminChallengeDetail')} style={{...Styling.containers.card, marginTop: 24 }}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminChallengeDetail', { challengeID: challenge.id })} style={{...Styling.containers.card, marginTop: 24 }}>
                 <Text style={Styling.text.header}>{challenge.name}</Text>
               </TouchableOpacity>
             )}

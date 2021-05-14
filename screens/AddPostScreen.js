@@ -102,9 +102,12 @@ export default class AddPostScreen extends React.Component {
 
     const challenge = this.props.route.params.challenge;
 
+    const firstName = await AsyncStorage.getItem('first_name');
+    const lastName = await AsyncStorage.getItem('last_name');
+
     const postObj = {
       userID: auth().currentUser.uid,
-      displayName: challenge.UIDToInfo[auth().currentUser.uid].name,
+      displayName: firstName + ' ' + lastName,
       title: this.state.title,
       description: this.state.description,
       timestamp: (new Date()).getTime(),

@@ -35,7 +35,7 @@ export default class AdminChallengeDetailScreen extends React.Component {
       this.props.navigation.navigate('Onboarding');
     } else {
       const user = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
-      const challengeDoc = await firestore().collection('Challenges').doc(user.challengeIDs[0]).get();
+      const challengeDoc = await firestore().collection('Challenges').doc(this.props.route.params.challengeID).get();
       const challenge = { id: challengeDoc.id, ...challengeDoc._data }
       this.setState({ user, challenge });
     }

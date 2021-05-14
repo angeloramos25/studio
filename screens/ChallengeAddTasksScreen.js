@@ -62,6 +62,7 @@ export default class ChallengeAddTasksScreen extends React.Component {
       challengeJoinCode: challengeJoinCode,
       studioName: studioName,
       tasks: this.state.tasks,
+      UIDToInfo: {},
     })).id;
 
     await firestore().collection('Admins').doc(auth().currentUser.uid).update({

@@ -180,18 +180,23 @@ export default class FeedScreen extends React.Component {
                 <DoubleClick doubleTap={() => this.handleLikePressed(item.id)}>
                   <PostCard {...item} />
                 </DoubleClick>
-                <View style={{...Styling.containers.row, marginTop: 12 }}>
-                  <TouchableOpacity onPress={() => this.handleLikePressed(item.id)}>
-                    <Image
-                      style={{ width: 25, height: 25, marginRight: 8 }}
-                      source={item.likes.filter(a => a.userID === auth().currentUser.uid).length > 0 ?
-                        Images.heart_filled
-                        :
-                        Images.heart}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('LikesList', { likes: item.likes })}>
-                    <Text style={Styling.text.bodyLarge}>{item.likes.length + ' likes'}</Text>
+                <View style={{...Styling.containers.row, marginTop: 12, justifyContent: 'space-between' }}>
+                  <View style={{...Styling.containers.row }}>
+                    <TouchableOpacity onPress={() => this.handleLikePressed(item.id)}>
+                      <Image
+                        style={{ width: 25, height: 25, marginRight: 8 }}
+                        source={item.likes.filter(a => a.userID === auth().currentUser.uid).length > 0 ?
+                          Images.heart_filled
+                          :
+                          Images.heart}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('LikesList', { likes: item.likes })}>
+                      <Text style={Styling.text.bodyLarge}>{item.likes.length + ' likes'}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <TouchableOpacity style={{ justifyContent: 'center' }}>
+                    <Text style={Styling.text.xl}>...</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={{...Styling.containers.card, ...Styling.containers.row, marginTop: 12, padding: 4 }}>
