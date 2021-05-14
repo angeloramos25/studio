@@ -43,34 +43,32 @@ export default class JoinChallengeScreen extends React.Component {
     let lastName = await AsyncStorage.getItem('last_name');
     let fullName = firstName + " " + lastName;
 
-    await firestore().collection('Challenges').where('challengeJoinCode', '==', this.state.challengeCode).get().then(querySnapshot => {
-      if (querySnapshot.size === 0) {
-        this.setState({errorMessage: 'Challenge code is invalid'});
-        return;
-      } else {
-        this.setState({errorMessage: ''});
-      }
+    const querySnapshot = await firestore().collection('Challenges').where('challengeJoinCode', '==', this.state.challengeCode).get();
+    if (querySnapshot.size === 0) {
+      this.setState({errorMessage: 'Challenge code is invalid'});
+      return;
+    } else {
+      this.setState({errorMessage: ''});
+    }
 
-      querySnapshot.forEach(documentSnapshot => {
-        let challengeID = documentSnapshot.id;
-        let challengeData = documentSnapshot.data()
+    const documentSnapshot = querySnapshot.docs[0];
+    let challengeID = documentSnapshot.id;
+    let challengeData = documentSnapshot.data()
 
-        firestore().collection('Clients').doc(auth().currentUser.uid).update({
-          challengeIDs: firestore.FieldValue.arrayUnion(challengeID)
-        });
-
-        let taskDates = {};
-        for (let task of challengeData.tasks) {
-          taskDates[task.name] = [];
-        }
-
-        userInfo = {};
-        let userKey = 'UIDToInfo.' + auth().currentUser.uid;
-        userInfo[userKey] = {name: fullName, taskDates: taskDates}
-
-        firestore().collection('Challenges').doc(challengeID).update(userInfo);
-      });
+    await firestore().collection('Clients').doc(auth().currentUser.uid).update({
+      challengeIDs: firestore.FieldValue.arrayUnion(challengeID)
     });
+
+    let taskDates = {};
+    for (let task of challengeData.tasks) {
+      taskDates[task.name] = [];
+    }
+
+    userInfo = {};
+    let userKey = 'UIDToInfo.' + auth().currentUser.uid;
+    userInfo[userKey] = {name: fullName, taskDates: taskDates}
+
+    await firestore().collection('Challenges').doc(challengeID).update(userInfo);
 
     this.props.navigation.navigate('UserChallenges');
 
