@@ -29,6 +29,7 @@ export default class ChallengesScreen extends React.Component {
   }
 
   async componentDidMount() {
+    // auth().signOut();
     this.loadChallenges();
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       if (this.props.route.params && this.props.route.params.shouldRefresh) {

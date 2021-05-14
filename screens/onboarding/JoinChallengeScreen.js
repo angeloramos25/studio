@@ -45,7 +45,7 @@ export default class JoinChallengeScreen extends React.Component {
 
     const querySnapshot = await firestore().collection('Challenges').where('challengeJoinCode', '==', this.state.challengeCode).get();
     if (querySnapshot.size === 0) {
-      this.setState({errorMessage: 'Challenge code is invalid'});
+      this.setState({errorMessage: 'Challenge code is invalid', isLoading: false});
       return;
     } else {
       this.setState({errorMessage: ''});
@@ -89,6 +89,7 @@ export default class JoinChallengeScreen extends React.Component {
               style={Styling.textfields.box}
               onChangeText={text => this.setState({ challengeCode: text })}
               value={this.state.challengeCode}
+              autoCapitalize='characters'
             />
           </View>
           <Button

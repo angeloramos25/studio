@@ -149,6 +149,7 @@ export default class CreateAccountScreen extends React.Component {
               placeholderTextColor="lightgray"
               onChangeText={text => this.setState({ email: text })}
               value={this.state.email}
+              autoCapitalize='none'
             />
           </View>
           <View style={{ marginTop: 24 }}>

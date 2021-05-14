@@ -47,7 +47,7 @@ export default class FeedScreen extends React.Component {
 
   async componentDidMount() {
     // auth().signOut();
-    let isAdmin = AsyncStorage.getItem('is_admin');
+    let isAdmin = await AsyncStorage.getItem('is_admin');
     if (isAdmin) {
       isAdmin = JSON.parse(isAdmin);
     }
@@ -172,6 +172,8 @@ export default class FeedScreen extends React.Component {
   }
 
   render() {
+
+    console.log(this.state.isAdmin);
     return(
       <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
           <FlatList
@@ -194,7 +196,7 @@ export default class FeedScreen extends React.Component {
               >
                 <View style={{...Styling.containers.row, justifyContent: 'space-between' }}>
                   <Text style={Styling.text.bodyLarge}>{item.displayName}</Text>
-                  {this.state.isAdmin && (item.id == this.state.actionPostID && this.state.isDeletingPost) ?
+                  {this.state.isAdmin ? (item.id == this.state.actionPostID && this.state.isDeletingPost) ?
                     <ActivityIndicator size="small" color="black" animating={true}/>
                     :
                     <TouchableOpacity onPress={() => {
@@ -203,6 +205,8 @@ export default class FeedScreen extends React.Component {
                     }}>
                       <Text style={{...Styling.text.xl, marginBottom: 4 }}>...</Text>
                     </TouchableOpacity>
+                    :
+                    null
                   }
                 </View>
                 <DoubleClick doubleTap={() => this.handleLikePressed(item.id)}>

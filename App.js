@@ -79,7 +79,7 @@ function UserChallengeStackScreen() {
         gestureEnabled: false,
       }}
     >
-      <UserChallengeStack.Screen name="UserChallengeDetail" component={AdminChallengeDetailScreen} />
+      <UserChallengeStack.Screen name="UserChallengeDetail" component={UserChallengeDetailScreen} />
       <UserChallengeStack.Screen name="LikesList" component={LikesListScreen} />
     </UserChallengeStack.Navigator>
   )
@@ -141,7 +141,7 @@ export default class App extends React.Component {
           }}
           mode="modal"
         >
-          <Stack.Screen name="UserChallenges" component={UserChallengeDetailScreen} />
+          <Stack.Screen name="UserChallenges" component={UserChallengeStackScreen} />
           <Stack.Screen name="AdminChallenges" component={AdminChallengeStackScreen} />
           <Stack.Screen name="Onboarding" component={OnboardingStackScreen} />
           <Stack.Screen name="ChallengeCreation" component={ChallengeCreationStackScreen} />

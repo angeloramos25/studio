@@ -96,6 +96,7 @@ export default class ChallengeBasicInfoScreen extends React.Component {
               style={Styling.textfields.box}
               onChangeText={text => this.setState({ challengeJoinCode: text })}
               value={this.state.challengeJoinCode}
+              autoCapitalize='characters'
             />
           </View>
           <Button

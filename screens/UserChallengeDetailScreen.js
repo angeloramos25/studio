@@ -91,7 +91,7 @@ export default class UserChallengeDetailScreen extends React.Component {
     if (this.state.challenge) {
       screens = {
         'Tasks': <TasksScreen handleTaskComplete={this.handleTaskComplete} handleUndoTask={this.handleUndoTask} tasks={this.state.challenge.tasks} taskDates={this.state.challenge.UIDToInfo[auth().currentUser.uid].taskDates} />,
-        'Feed': <FeedScreen navigation={this.props.navigation} user={this.state.user} challenge={this.state.challenge} />,
+        'Feed': <FeedScreen onFeedLoad={() => this.setState({ shouldRefresh: false })} shouldRefresh={this.state.shouldRefresh} navigation={this.props.navigation} user={this.state.user} challenge={this.state.challenge} />,
         'Leaderboard': <LeaderboardScreen challenge={this.state.challenge} />
       }
     }
