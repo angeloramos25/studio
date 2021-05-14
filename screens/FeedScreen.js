@@ -17,6 +17,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import DoubleClick from 'react-native-double-tap';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ActionSheet from 'react-native-actionsheet';
 
 import Images from '../assets/Images.js';
 import Styling from '../constants/Styling';
@@ -34,14 +35,23 @@ export default class FeedScreen extends React.Component {
       commentInputs: {},
       inputLoading: [],
       refreshing: false,
+      actionPostID: null,
+      isDeletingPost: false,
+      isAdmin: false,
     };
     this.loadPosts = this.loadPosts.bind(this);
     this.postComment = this.postComment.bind(this);
     this.handleLikePressed = this.handleLikePressed.bind(this);
+    this.handleActionSheet = this.handleActionSheet.bind(this);
   }
 
   async componentDidMount() {
     // auth().signOut();
+    let isAdmin = AsyncStorage.getItem('is_admin');
+    if (isAdmin) {
+      isAdmin = JSON.parse(isAdmin);
+    }
+    this.setState({ isAdmin });
     this.loadPosts();
   }
 
@@ -49,6 +59,15 @@ export default class FeedScreen extends React.Component {
     if (!prevProps.shouldRefresh && this.props.shouldRefresh) {
       this.loadPosts();
       this.props.onFeedLoad();
+    }
+  }
+
+  async handleActionSheet(index) {
+    if (index === 0) {
+      this.setState({ isDeletingPost: true });
+      await firestore().collection('Challenges/' + this.props.challenge.id + '/Feed').doc(this.state.actionPostID).delete();
+      this.setState({ isDeletingPost: false });
+      this.loadPosts();
     }
   }
 
@@ -175,13 +194,21 @@ export default class FeedScreen extends React.Component {
               >
                 <View style={{...Styling.containers.row, justifyContent: 'space-between' }}>
                   <Text style={Styling.text.bodyLarge}>{item.displayName}</Text>
-                  <Text style={Styling.text.body}>{daysAgo(item.timestamp)}</Text>
+                  {this.state.isAdmin && (item.id == this.state.actionPostID && this.state.isDeletingPost) ?
+                    <ActivityIndicator size="small" color="black" animating={true}/>
+                    :
+                    <TouchableOpacity onPress={() => {
+                      this.setState({ actionPostID: item.id })
+                      this.ActionSheet.show();
+                    }}>
+                      <Text style={{...Styling.text.xl, marginBottom: 4 }}>...</Text>
+                    </TouchableOpacity>
+                  }
                 </View>
                 <DoubleClick doubleTap={() => this.handleLikePressed(item.id)}>
                   <PostCard {...item} />
                 </DoubleClick>
-                <View style={{...Styling.containers.row, marginTop: 12, justifyContent: 'space-between' }}>
-                  <View style={{...Styling.containers.row }}>
+                  <View style={{...Styling.containers.row, marginTop: 12 }}>
                     <TouchableOpacity onPress={() => this.handleLikePressed(item.id)}>
                       <Image
                         style={{ width: 25, height: 25, marginRight: 8 }}
@@ -195,10 +222,6 @@ export default class FeedScreen extends React.Component {
                       <Text style={Styling.text.bodyLarge}>{item.likes.length + ' likes'}</Text>
                     </TouchableOpacity>
                   </View>
-                  <TouchableOpacity style={{ justifyContent: 'center' }}>
-                    <Text style={Styling.text.xl}>...</Text>
-                  </TouchableOpacity>
-                </View>
                 <View style={{...Styling.containers.card, ...Styling.containers.row, marginTop: 12, padding: 4 }}>
                   <TextInput
                     onFocus={() => this.flatListRef.scrollToIndex({ animated: true, index: index })}
@@ -235,6 +258,14 @@ export default class FeedScreen extends React.Component {
           <TouchableOpacity onPress={() => this.props.navigation.navigate('AddPost', { challenge: this.props.challenge })} style={styles.postButton}>
             <Text style={{ fontSize: 24, color: 'white' }}>+</Text>
           </TouchableOpacity>
+          <ActionSheet
+            ref={o => this.ActionSheet = o}
+            title={'Post Options'}
+            options={['Delete Post', 'Cancel']}
+            destructiveButtonIndex={0}
+            cancelButtonIndex={1}
+            onPress={this.handleActionSheet}
+          />
       </View>
     );
   }
