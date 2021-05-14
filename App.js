@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import * as Font from 'expo-font';
 import { StyleSheet, Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //Navigation
 import { NavigationContainer } from '@react-navigation/native';
@@ -91,7 +92,11 @@ export default class App extends React.Component {
       'jost-light': require('./assets/fonts/Jost-Regular.ttf'),
       'jost-medium': require('./assets/fonts/Jost-Medium.ttf'),
     });
-    this.setState({ fontLoaded: true });
+    let isAdmin = await AsyncStorage.getItem('is_admin');
+    if (isAdmin) {
+      isAdmin = JSON.parse(isAdmin);
+    }
+    this.setState({ fontLoaded: true, isAdmin });
   }
 
   render() {
@@ -104,12 +109,14 @@ export default class App extends React.Component {
       <NavigationContainer>
         <StatusBar barStyle="dark-content" />
         <Stack.Navigator
+          initialRouteName={this.state.isAdmin ? 'AdminChallenges' : 'UserChallengeDetail'}
           screenOptions={{
             headerShown: false,
           }}
           mode="modal"
         >
           <Stack.Screen name="UserChallengeDetail" component={UserChallengeDetailScreen} />
+          <Stack.Screen name="AdminChallenges" component={ChallengesScreen} />
           <Stack.Screen name="Onboarding" component={OnboardingStackScreen} />
           <Stack.Screen name="ChallengeCreation" component={ChallengeCreationStackScreen} />
           <Stack.Screen name="AddPost" component={AddPostScreen} />

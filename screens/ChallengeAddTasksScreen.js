@@ -47,6 +47,8 @@ export default class ChallengeAddTasksScreen extends React.Component {
     await firestore().collection('Admins').doc(auth().currentUser.uid).update({
       challengeIDs: firestore.FieldValue.arrayUnion(challengeID)
     });
+
+    this.props.navigation.navigate('AdminChallenges');
   }
 
   render() {

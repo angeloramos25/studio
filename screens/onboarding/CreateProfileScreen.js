@@ -32,6 +32,8 @@ export default class CreateAccountScreen extends React.Component {
   async createProfile() {
     let isClient = this.props.route.params.userType === 'client';
 
+    AsyncStorage.setItem('is_admin', JSON.stringify(!isClient));
+
     let errorMessage;
     if (this.state.firstName === '') {
       errorMessage = 'Please enter your first name.';
@@ -61,6 +63,7 @@ export default class CreateAccountScreen extends React.Component {
         uid: auth().currentUser.uid,
         challengeIDs: []
       });
+      this.props.navigation.navigate('JoinChallenge');
     } else {
       await firestore().collection('Admins').doc(auth().currentUser.uid).set({
         firstName: this.state.firstName,
@@ -76,12 +79,7 @@ export default class CreateAccountScreen extends React.Component {
       });
 
       AsyncStorage.setItem('studio_name', this.state.studioName);
-    }
-
-    this.setState({ isLoading: false });
-
-    if (isClient) {
-      this.props.navigation.navigate('JoinChallenge');
+      this.props.navigation.navigate('AdminChallenges');
     }
   }
 

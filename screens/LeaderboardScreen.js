@@ -42,18 +42,18 @@ export default class LeaderboardScreen extends React.Component {
       <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
         <ScrollView>
           <View style={{ flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'space-around', marginTop: 24}}>
-            <View style={{...Styling.containers.row, alignItems: 'center', justifyContent: 'space-around', width: '100%'}}>
-              <Text style={{ ...Styling.text.subheader }}>Rank</Text>
-              <Text style={Styling.text.subheader}>Name</Text>
-              <Text style={{ ...Styling.text.subheader }}>Points</Text>
+            <View style={{...Styling.containers.row, alignItems: 'center', justifyContent: 'flex-start', width: '100%'}}>
+              <Text style={{ ...Styling.text.subheader, flex: 1 }}>Rank</Text>
+              <Text style={{...Styling.text.subheader, flex: 3 }}>Name</Text>
+              <Text style={{ ...Styling.text.subheader, flex: 1 }}>Points</Text>
             </View>
             {uidPoints.map((tuple, index) =>
-              <View style={{...Styling.containers.horizontalCard, alignItems: 'center', justifyContent: 'space-around', borderColor: 'black', borderWidth: currUID === tuple[0] ? 1 : 0}}>
-                <Text style={{ ...Styling.text.body }}>{index+1}</Text>
-                <Text style={Styling.text.subheader}>
+              <View style={{...Styling.containers.horizontalCard, alignItems: 'center', justifyContent: 'flex-start', borderColor: 'black', borderWidth: currUID === tuple[0] ? 1 : 0}}>
+                <Text style={{ ...Styling.text.body, flex: 1 }}>{index+1}</Text>
+                <Text style={{...Styling.text.bodyLarge, flex: 3 }}>
                   {this.props.challenge.UIDToInfo[tuple[0]].name}
                 </Text>
-                <Text style={{ ...Styling.text.body }}>{tuple[1]}</Text>
+                <Text style={{ ...Styling.text.body, flex: 1 }}>{tuple[1]}</Text>
               </View>
             )}
           </View>

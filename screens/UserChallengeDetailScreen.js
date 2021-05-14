@@ -46,7 +46,7 @@ export default class UserChallengeDetailScreen extends React.Component {
   async handleTaskComplete(taskName) {
     const uid = auth().currentUser.uid;
     const fieldName = 'UIDToInfo.' + uid + '.taskDates.' + taskName;
-    firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').update({
+    firestore().collection('Challenges').doc(this.state.challenge.id).update({
       [fieldName]: firestore.FieldValue.arrayUnion(new Date()),
     });
     const challenge = this.state.challenge;
@@ -79,7 +79,7 @@ export default class UserChallengeDetailScreen extends React.Component {
     return(
       <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
         <TopBar
-          title="Challenge Name"
+          title={this.state.challenge ? this.state.challenge.name : 'Loading...'}
         />
         <SafeAreaView style={Styling.containers.wrapper}>
           <View style={{...Styling.containers.row, backgroundColor: 'white', width: '100%' }}>
