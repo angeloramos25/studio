@@ -41,6 +41,15 @@ export default class UserChallengeDetailScreen extends React.Component {
       const challenge = { id: challengeDoc.id, ...challengeDoc._data }
       this.setState({ user, challenge });
     }
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      if (this.props.route.params && this.props.route.params.shouldRefresh) {
+        this.setState({ shouldRefresh: true });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
   }
 
   async handleTaskComplete(taskName) {

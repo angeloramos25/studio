@@ -47,7 +47,6 @@ export default class FeedScreen extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.shouldRefresh && this.props.shouldRefresh) {
-      console.log('breh');
       this.loadPosts();
       this.props.onFeedLoad();
     }

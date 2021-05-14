@@ -95,7 +95,7 @@ function AdminChallengeStackScreen() {
         gestureEnabled: false,
       }}
     >
-      <AdminChallengeStack.Screen name="AdminChallenges" component={ChallengesScreen} />
+      <AdminChallengeStack.Screen name="AdminChallengesOverview" component={ChallengesScreen} />
       <AdminChallengeStack.Screen name="AdminChallengeDetail" component={AdminChallengeDetailScreen} />
       <AdminChallengeStack.Screen name="LikesList" component={LikesListScreen} />
     </AdminChallengeStack.Navigator>

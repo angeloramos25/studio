@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -22,10 +23,28 @@ export default class ChallengesScreen extends React.Component {
     this.state = {
       admin: null,
       challenges: null,
+      refreshing: false,
     }
+    this.loadChallenges = this.loadChallenges.bind(this)
   }
 
   async componentDidMount() {
+    this.loadChallenges();
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      if (this.props.route.params && this.props.route.params.shouldRefresh) {
+        console.log('made it here');
+        this.loadChallenges();
+        this.props.route.params.shouldRefresh = false;
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+
+  async loadChallenges() {
+    this.setState({ refreshing: true });
     const admin = (await firestore().collection('Admins').doc(auth().currentUser.uid).get())._data;
     const promises = [];
     for (const id of admin.challengeIDs) {
@@ -34,6 +53,7 @@ export default class ChallengesScreen extends React.Component {
     Promise.all(promises).then(values =>
       this.setState({ challenges: values.map(doc => doc._data )})
     );
+    this.setState({ refreshing: false });
   }
 
   render() {
@@ -43,7 +63,15 @@ export default class ChallengesScreen extends React.Component {
           title="Challenges"
         />
         <SafeAreaView style={Styling.containers.wrapper}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.loadChallenges}
+              />
+            }
+            showsVerticalScrollIndicator={false}
+          >
             <Button
               onPress={() => this.props.navigation.navigate('ChallengeCreation')}
               text="New Challenge"

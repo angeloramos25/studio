@@ -68,7 +68,7 @@ export default class ChallengeAddTasksScreen extends React.Component {
       challengeIDs: firestore.FieldValue.arrayUnion(challengeID)
     });
 
-    this.props.navigation.navigate('AdminChallenges');
+    this.props.navigation.navigate('AdminChallengesOverview', { shouldRefresh: true });
   }
 
   deleteTask() {
