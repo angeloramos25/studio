@@ -25,8 +25,8 @@ export default class ChallengeInfoScreen extends React.Component {
           rightButtonColor={Styling.colors.primary}
           onRightPress={() => this.props.navigation.pop()}
         />
-        <SafeAreaView style={Styling.containers.wrapper}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView style={{...Styling.containers.wrapper, flex: 1 }}>
+          <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <View style={{ marginTop: 24 }}>
             <Text style={Styling.text.label}>Challenge Name</Text>
             <View style={Styling.containers.card}>

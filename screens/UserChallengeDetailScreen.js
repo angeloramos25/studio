@@ -32,19 +32,6 @@ export default class UserChallengeDetailScreen extends React.Component {
 
   async componentDidMount() {
     // auth().signOut();
-    const user = auth().currentUser;
-    if (!user ) {
-      this.props.navigation.navigate('Onboarding');
-    } else {
-      const userObj = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
-      if (!userObj || userObj.challengeIDs.length === 0) {
-        this.props.navigation.navigate('Onboarding');
-        return;
-      }
-      const challengeDoc = await firestore().collection('Challenges').doc(userObj.challengeIDs[0]).get();
-      const challenge = { id: challengeDoc.id, ...challengeDoc._data }
-      this.setState({ user: userObj, challenge });
-    }
     this._unsubscribe = this.props.navigation.addListener('focus', async () => {
       console.log('called');
       if (this.props.route.params) {
@@ -62,6 +49,19 @@ export default class UserChallengeDetailScreen extends React.Component {
         }
       }
     });
+    const user = auth().currentUser;
+    if (!user ) {
+      this.props.navigation.navigate('Onboarding');
+    } else {
+      const userObj = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
+      if (!userObj || userObj.challengeIDs.length === 0) {
+        this.props.navigation.navigate('Onboarding');
+        return;
+      }
+      const challengeDoc = await firestore().collection('Challenges').doc(userObj.challengeIDs[0]).get();
+      const challenge = { id: challengeDoc.id, ...challengeDoc._data }
+      this.setState({ user: userObj, challenge });
+    }
   }
 
   componentWillUnmount() {
