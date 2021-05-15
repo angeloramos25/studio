@@ -4,6 +4,7 @@ import {
   Text,
   SafeAreaView,
   View,
+  ScrollView,
 } from 'react-native';
 
 import Images from '../assets/Images.js';
@@ -17,7 +18,7 @@ export default class ChallengeInfoScreen extends React.Component {
     const challenge = this.props.route.params.challenge;
 
     return(
-      <View style={{ backgroundColor: '#FAFAFA' }}>
+      <View style={{ backgroundColor: '#FAFAFA', flex: 1 }}>
         <TopBar
           title="Challenge Info"
           rightButtonText="Done"
@@ -25,6 +26,7 @@ export default class ChallengeInfoScreen extends React.Component {
           onRightPress={() => this.props.navigation.pop()}
         />
         <SafeAreaView style={Styling.containers.wrapper}>
+          <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ marginTop: 24 }}>
             <Text style={Styling.text.label}>Challenge Name</Text>
             <View style={Styling.containers.card}>
@@ -53,6 +55,7 @@ export default class ChallengeInfoScreen extends React.Component {
               </View>
             )}
           </View>
+          </ScrollView>
         </SafeAreaView>
       </View>
     )
