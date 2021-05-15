@@ -36,24 +36,29 @@ export default class UserChallengeDetailScreen extends React.Component {
     if (!user ) {
       this.props.navigation.navigate('Onboarding');
     } else {
-      const user = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
-      if (user.challengeIDs.length === 0) {
+      const userObj = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
+      if (!userObj || userObj.challengeIDs.length === 0) {
         this.props.navigation.navigate('Onboarding');
         return;
       }
-      const challengeDoc = await firestore().collection('Challenges').doc(user.challengeIDs[0]).get();
+      const challengeDoc = await firestore().collection('Challenges').doc(userObj.challengeIDs[0]).get();
       const challenge = { id: challengeDoc.id, ...challengeDoc._data }
-      this.setState({ user, challenge });
+      this.setState({ user: userObj, challenge });
     }
     this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+      console.log('called');
       if (this.props.route.params) {
+        console.log(this.props.route.params.challengeID);
         if (this.props.route.params.shouldRefresh) {
           this.setState({ shouldRefresh: true });
-        } else {
-          const user = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
-          const challengeDoc = await firestore().collection('Challenges').doc(user.challengeIDs[0]).get();
-          const challenge = { id: challengeDoc.id, ...challengeDoc._data }
-          this.setState({ user, challenge });
+        } else if (this.props.route.params.challengeID) {
+          console.log('here');
+          const userDoc = (await firestore().collection('Clients').doc(auth().currentUser.uid).get())._data;
+          console.log(userDoc);
+          const challengeObj = await firestore().collection('Challenges').doc(this.props.route.params.challengeID).get();
+          console.log(challengeObj);
+          const challenge2 = { id: challengeObj.id, ...challengeObj._data }
+          this.setState({ user: userDoc, challenge: challenge2 });
         }
       }
     });
@@ -80,7 +85,7 @@ export default class UserChallengeDetailScreen extends React.Component {
     challenge.UIDToInfo[uid].taskDates[taskName].pop();
 
     const fieldName = 'UIDToInfo.' + uid + '.taskDates.' + taskName;
-    firestore().collection('Challenges').doc('v1KPYXY3tBPV27X6pMcm').update({
+    firestore().collection('Challenges').doc(this.state.challenge.id).update({
       [fieldName]: challenge.UIDToInfo[uid].taskDates[taskName],
     });
     this.setState({ challenge });

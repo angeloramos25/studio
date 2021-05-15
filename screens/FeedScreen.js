@@ -188,7 +188,7 @@ export default class FeedScreen extends React.Component {
             showsVerticalScrollIndicator={false}
             data={this.state.activities}
             keyExtractor={activity => activity.id}
-            contentContainerStyle={{ paddingBottom: 196 }}
+            contentContainerStyle={{ paddingBottom: 500 }}
             renderItem={({item, index}) => {
               return (
               <View
@@ -228,7 +228,6 @@ export default class FeedScreen extends React.Component {
                   </View>
                 <View style={{...Styling.containers.card, ...Styling.containers.row, marginTop: 12, padding: 4 }}>
                   <TextInput
-                    onFocus={() => this.flatListRef.scrollToIndex({ animated: true, index: index })}
                     value={this.state.commentInputs[item.id]}
                     onSubmitEditing={this.handleSearch}
                     style={{...Styling.textfields.floating, flex: 15 }}

@@ -216,7 +216,7 @@ function SignInButton(props) {
       {!isLoading ?
       <View style={{...Styling.containers.row, backgroundColor: backgroundColor, justifyContent: 'center', marginTop: 12, height: 44, borderRadius: 10}}>
             <Image source={Images[imageName]} style={{width: 20, height: 20, resizeMode: 'contain', marginVertical: 14}} />
-            <Text style={{...Styling.text.title, color: textColor, marginLeft: 12}}>Sign in with {name}</Text>
+            <Text style={{...Styling.text.bodyLarge, color: textColor, marginLeft: 12}}>Sign in with {name}</Text>
       </View>
         :
         <View style={{...Styling.containers.row, backgroundColor: backgroundColor, justifyContent: 'center', marginTop: 12, height: 44}}>

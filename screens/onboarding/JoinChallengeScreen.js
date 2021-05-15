@@ -70,7 +70,7 @@ export default class JoinChallengeScreen extends React.Component {
 
     await firestore().collection('Challenges').doc(challengeID).update(userInfo);
 
-    this.props.navigation.navigate('UserChallenges', { challengeID: challengeID });
+    this.props.navigation.navigate('UserChallengeDetail', { challengeID: challengeID });
 
     this.setState({ isLoading: false });
 
