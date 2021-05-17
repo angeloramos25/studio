@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "250573103756",
+    "project_id": "habitat-studio",
+    "storage_bucket": "habitat-studio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250573103756:android:751f7922251943322651a9",
+        "android_client_info": {
+          "package_name": "co.habitatapp.studio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250573103756-sjj2vq3vs2l1v3uruvhh87h2mbic2pd7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh9qbg4gwZkt7bCbySqi46NaGJJvQzj9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250573103756-sjj2vq3vs2l1v3uruvhh87h2mbic2pd7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "250573103756-tf5n0bl98tc1f8mf9pbs3fhdpcnae8vq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.habitatapp.Studio"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

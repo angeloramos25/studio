@@ -1,4 +1,4 @@
-package com.studio;
+package co.habitatapp.studio;
 
 import android.os.Bundle;
 
